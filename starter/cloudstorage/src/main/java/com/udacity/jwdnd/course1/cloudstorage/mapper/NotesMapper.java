@@ -16,6 +16,9 @@ public interface NotesMapper {
     @Select("SELECT * FROM notes")
     public List<Notes> findAllNotes();
 
+    @Select("Select count(*) from notes")
+    public int getCountOfNotes();
+
     @Update("UPDATE notes set notetitle = #{notetitle}, notedescription = #{notedescription}," +
             "userid = #{userid} where noteid = #{noteid}")
     public void updateNotes(int noteid);
