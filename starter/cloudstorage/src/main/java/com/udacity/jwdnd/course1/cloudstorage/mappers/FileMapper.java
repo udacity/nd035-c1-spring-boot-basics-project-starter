@@ -5,14 +5,15 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface FileMapper {
-    @Select("SELECT * FROM File WHERE fileId = #{fileId}")
+    @Select("SELECT * FROM Files WHERE fileId = #{fileId}")
     File selectFile(Integer fileId);
 
-    @Insert("INSERT INTO File(fileName, contentType, fileSize, userId, fileData) VALUES (#{fileName}, ${contentType}," +
+    @Insert("INSERT INTO Files(fileName, contentType, fileSize, userId, fileData) VALUES (#{fileName}, " +
+            "${contentType}," +
             " #{fileSize}, #{userId}, #{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
     Integer insertFile(File file);
 
-    @Delete("DELETE FROM File WHERE fileId = #{fileId}")
+    @Delete("DELETE FROM Files WHERE fileId = #{fileId}")
     void deleteFile(Integer fileId);
 }
