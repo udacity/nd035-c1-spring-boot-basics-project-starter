@@ -31,6 +31,7 @@ public class HomeController {
     public String getHomePage(HomeForm homeForm, Model model) {
         System.out.println("We are in getHomePage!");
         allNotes = homeService.getAllNotes();
+        model.addAttribute("allNotes", allNotes);
         System.out.println("Size of allNotes: " + allNotes.size());
         return "home";
     }

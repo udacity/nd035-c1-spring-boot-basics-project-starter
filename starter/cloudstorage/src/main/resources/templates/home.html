@@ -75,19 +75,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <div id="chatMessage" th:each="note : ${allNotes}">
+                                    <div id="allNotes" th:each="note : ${allNotes}">
+                                        <tr>
                                             <td>
-                                                <span th:text="${note.notetitle}">NoteTitle</span>: <span th:text="${note.notedescription}">Note Description</span>
+                                                <button id="editNote" th:action="@{/editnote}" type="button" class="btn btn-success">Edit</button>
+                                                <a th:action="@{/deletenote}" class="btn btn-danger">Delete</a>
                                             </td>
-                                        </div>
-                                        <td>
-                                            <button id="editNote" th:action="@{/editnote}" type="button" class="btn btn-success">Edit</button>
-                                            <a th:action="@{/deletenote}" class="btn btn-danger">Delete</a>
-                                        </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
-                                    </tr>
+                                             <td>
+                                                <span th:text="${note.notetitle}">NoteTitle</span>
+                                             </td>
+                                             <td>
+                                                <span th:text="${note.notedescription}">Note Description</span>
+                                             </td>
+                                        </tr>
+                                    </div>
                                 </tbody>
                             </table>
                         </div>
