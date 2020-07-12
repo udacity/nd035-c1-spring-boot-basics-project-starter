@@ -31,23 +31,21 @@ public class HomeController {
     @RequestMapping("/home")
     public String getHomePage(HomeForm homeForm, Model model) {
         System.out.println("We are in getHomePage!");
-        allNotes = homeService.getAllNotes();
+        allNotes = homeService.getAllNotes(getUserId());
         model.addAttribute("allNotes", allNotes);
-        System.out.println("Size of allNotes: " + allNotes.size());
         return "home";
     }
 
     @RequestMapping("/addnote")
     public String addOrUpdateNote(HomeForm homeForm, Model model) {
         homeForm.setUserId(getUserId());
+        int success;
         if (homeForm.getNoteAction().equals("addNote")) {
-            int noteId = homeService.addNote(homeForm);
+            success = homeService.addNote(homeForm);
         } else {
-            System.out.println("Contents of noteId: " + homeForm.getNoteId());
-            homeService.updateNote(homeForm);
+            success = homeService.updateNote(homeForm);
         }
-        // TODO - handle errors?
-        model.addAttribute("resultSuccess", true);
+        model.addAttribute("resultSuccess", (success == 1) ? true : false);
         model.addAttribute("tab", "notes");
         model.addAttribute("nextAction", "home");
         return "result";
@@ -57,8 +55,9 @@ public class HomeController {
     public String deleteNote(@RequestParam String noteid, Model model) {
         System.out.println("We are here in deleteNote");
         int id = Integer.parseInt(noteid);
-        homeService.deleteNote(id);
-        model.addAttribute("resultSuccess", true);
+        int userid = getUserId();
+        int success = homeService.deleteNote(id, userid);
+        model.addAttribute("resultSuccess", (success == 1) ? true : false);
         return "result";
     }
 

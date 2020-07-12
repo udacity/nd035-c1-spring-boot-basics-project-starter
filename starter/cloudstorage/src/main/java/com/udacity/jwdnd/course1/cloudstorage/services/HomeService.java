@@ -29,17 +29,16 @@ public class HomeService {
         return temp;
     }
 
-    // TODO - return something
-    public void updateNote(HomeForm homeForm) {
-        notesMapper.updateNotes(homeForm.getNoteId(), homeForm.getNoteTitle(), homeForm.getNoteDescription());
+    public int updateNote(HomeForm homeForm) {
+        return notesMapper.updateNotes(homeForm.getNoteId(), homeForm.getUserId(),
+                homeForm.getNoteTitle(), homeForm.getNoteDescription());
     }
 
-    // TODO - return something
-    public void deleteNote(int noteId) {
-        notesMapper.deleteNotes(noteId);
+    public int deleteNote(int noteId, int userid) {
+        return notesMapper.deleteNotes(noteId, userid);
     }
 
-    public List<Notes> getAllNotes() {
-        return notesMapper.findAllNotes();
+    public List<Notes> getAllNotes(int userId) {
+        return notesMapper.findAllNotes(userId);
     }
 }
