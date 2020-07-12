@@ -112,7 +112,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/addnote}" method="POST">
+                                        <form action="#" th:action="@{/addOrUpdateNote}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <input type="hidden" name="noteAction" id="note-action">
                                             <div class="form-group">
@@ -150,15 +150,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <button id="editCredential" type="button" class="btn btn-success">Edit</button>
-                                        <a id="deleteCredential" th:action="@{/deleteCredential}" class="btn btn-danger">Delete</a>
-                                    </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td>Example Credential Password</td>
-                                </tr>
+                                    <div id="allCredentials" th:each="credential : ${allCredentials}">
+                                        <tr>
+                                            <td>
+                                                <button
+                                                        id="editCredential"
+                                                        th:data-credentialId="${credential.credentialid}"
+                                                        th:data-url="${credential.url}"
+                                                        th:data-username="${credential.username}"
+                                                        th:data-password="${credential.password}"
+                                                        type="button"
+                                                        onclick="showCredentialModal('updateCredential', this.getAttribute('data-credentialId'),
+                                                            this.getAttribute('data-url'), this.getAttribute('data-username'), this.getAttribute('data-password'))"
+                                                        class="btn btn-success">Edit
+                                                </button>
+
+                                                <a id="deleteCredential" th:href="@{/deleteCredential(credentialid=${credential.credentialid})}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                            <td>
+                                                <span th:text="${credential.url}">Credential URL</span>
+                                            </td>
+                                            <td>
+                                                <span th:text="${credential.username}">Credential UserName</span>
+                                            </td>
+                                            <td>
+                                                <span th:text="${credential.password}">Credential PassWord</span>
+                                            </td>
+                                        </tr>
+                                    </div>
                                 </tbody>
                             </table>
                         </div>
@@ -173,18 +192,19 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/addCredential}" method="POST">
+                                        <form action="#" th:action="@{/addOrUpdateCredentials}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
+                                            <input type="hidden" name="credentialAction" id="credential-action">
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">URL</label>
+                                                <label for="credential-url" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">Username</label>
+                                                <label for="credential-username" class="col-form-label">Username</label>
                                                 <input type="text" name= "username" class="form-control" id="credential-username" maxlength="30" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">Password</label>
+                                                <label for="credential-password" class="col-form-label">Password</label>
                                                 <input type="text" name= "password" class="form-control" id="credential-password" maxlength="30" required>
                                             </div>
                                             <button id="credentialSubmit" type="submit" class="d-none"></button>
@@ -218,11 +238,12 @@
             }
 
             // For opening the credentials modal
-            function showCredentialModal(credentialId, url, username, password) {
+            function showCredentialModal(formAction, credentialId, url, username, password) {
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-url').val(url ? url : '');
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');
+                $('#credential-action').val(formAction ? formAction : "addCredential");
                 $('#credentialModal').modal('show');
             }
         </script>

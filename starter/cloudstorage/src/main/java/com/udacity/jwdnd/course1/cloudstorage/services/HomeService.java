@@ -3,6 +3,8 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FilesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
 import com.udacity.jwdnd.course1.cloudstorage.model.HomeForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,7 @@ public class HomeService {
 
     public int addNote(HomeForm homeForm) {
         Notes newNote = new Notes(homeForm.getNoteTitle(), homeForm.getNoteDescription(), homeForm.getUserId());
-        Integer temp = notesMapper.insertNotes(newNote);
-        System.out.println("Inside addNote: ID returned: " + temp);
-        return temp;
+        return notesMapper.insertNotes(newNote);
     }
 
     public int updateNote(HomeForm homeForm) {
@@ -40,5 +40,33 @@ public class HomeService {
 
     public List<Notes> getAllNotes(int userId) {
         return notesMapper.findAllNotes(userId);
+    }
+
+    public int addCredentials(CredentialForm credentialForm) {
+        return credentialsMapper.insertCredentials(createCredentials(credentialForm));
+    }
+
+    private Credentials createCredentials(CredentialForm credentialForm) {
+        Credentials newCredential = new Credentials();
+        if (credentialForm.getCredentialId() != 0)
+            newCredential.setCredentialid(credentialForm.getCredentialId());
+        newCredential.setKey(credentialForm.getKey());
+        newCredential.setPassword(credentialForm.getPassword());
+        newCredential.setUrl(credentialForm.getUrl());
+        newCredential.setUsername(credentialForm.getUsername());
+        newCredential.setUserid(credentialForm.getUserId());
+        return newCredential;
+    }
+
+    public int updateCredential(CredentialForm credentialForm) {
+        return credentialsMapper.updateCredential(createCredentials(credentialForm));
+    }
+
+    public int deleteCredential(int credentialid, int userid) {
+        return credentialsMapper.deleteCredential(credentialid, userid);
+    }
+
+    public List<Credentials> getAllCredentials(int userid) {
+        return credentialsMapper.getAllCredentials(userid);
     }
 }
