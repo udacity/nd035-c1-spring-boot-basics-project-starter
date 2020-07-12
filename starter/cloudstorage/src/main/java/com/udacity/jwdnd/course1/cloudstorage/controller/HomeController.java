@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -37,28 +38,28 @@ public class HomeController {
     }
 
     @RequestMapping("/addnote")
-    public String addNote(HomeForm homeForm, Model model) {
-        System.out.println("We are adding a note!");
-        System.out.println("The contents of homeForm 1: " + homeForm.getNoteTitle());
-        System.out.println("The contents of homeForm 2: " + homeForm.getNoteDescription());
-        System.out.println("The contents of homeForm.noteAction: " + homeForm.getNoteAction());
-        System.out.println("The contents of homeForm.noteId: " + homeForm.getNoteId());
+    public String addOrUpdateNote(HomeForm homeForm, Model model) {
         homeForm.setUserId(getUserId());
         if (homeForm.getNoteAction().equals("addNote")) {
-            homeService.addNote(homeForm);
+            int noteId = homeService.addNote(homeForm);
         } else {
             System.out.println("Contents of noteId: " + homeForm.getNoteId());
             homeService.updateNote(homeForm);
         }
+        // TODO - handle errors?
         model.addAttribute("resultSuccess", true);
         model.addAttribute("tab", "notes");
         model.addAttribute("nextAction", "home");
         return "result";
     }
 
-    @RequestMapping("/editnote")
-    public String editNote() {
-        return "home";
+    @RequestMapping("/deletenote")
+    public String deleteNote(@RequestParam String noteid, Model model) {
+        System.out.println("We are here in deleteNote");
+        int id = Integer.parseInt(noteid);
+        homeService.deleteNote(id);
+        model.addAttribute("resultSuccess", true);
+        return "result";
     }
 
     private int getUserId() {

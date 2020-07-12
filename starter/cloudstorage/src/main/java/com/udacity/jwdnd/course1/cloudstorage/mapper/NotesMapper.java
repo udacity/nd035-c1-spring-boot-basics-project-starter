@@ -13,12 +13,11 @@ public interface NotesMapper {
     @Options(useGeneratedKeys = false, keyProperty = "#{noteid}")
     public Integer insertNotes(Notes notes);
 
+    // TODO - should only be for the given UserId!
     @Select("SELECT * FROM notes")
     public List<Notes> findAllNotes();
 
-    @Select("Select count(*) from notes")
-    public int getCountOfNotes();
-
+    //TODO - what does an update return, a 1 or a boolean?
     @Update("UPDATE notes set notetitle = #{notetitle}, notedescription = #{notedescription} " +
             "where noteid = #{noteid} ")
     public void updateNotes(int noteid, String notetitle, String notedescription);

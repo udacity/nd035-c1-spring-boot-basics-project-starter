@@ -29,8 +29,14 @@ public class HomeService {
         return temp;
     }
 
+    // TODO - return something
     public void updateNote(HomeForm homeForm) {
         notesMapper.updateNotes(homeForm.getNoteId(), homeForm.getNoteTitle(), homeForm.getNoteDescription());
+    }
+
+    // TODO - return something
+    public void deleteNote(int noteId) {
+        notesMapper.deleteNotes(noteId);
     }
 
     public List<Notes> getAllNotes() {

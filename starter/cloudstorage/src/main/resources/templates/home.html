@@ -88,7 +88,7 @@
                                                         onclick="showNoteModal('updateNote', this.getAttribute('data-noteId'), this.getAttribute('data-noteTitle'), this.getAttribute('data-noteDescription'))"
                                                         class="btn btn-success">Edit
                                                 </button>
-                                                <a id="deleteNote" th:action="@{/deletenote(noteid=${note.noteid})}" class="btn btn-danger">Delete</a>
+                                                <a id="deleteNote" th:href="@{/deletenote(noteid=${note.noteid})}" class="btn btn-danger">Delete</a>
                                             </td>
                                              <td>
                                                 <span th:text="${note.notetitle}">NoteTitle</span>
@@ -210,8 +210,6 @@
         <script type="text/javascript">
             // For opening the note modal
             function showNoteModal(formAction, noteId, noteTitle, noteDescription) {
-                alert(formAction);
-                alert(noteId);
                 $('#note-id').val(noteId ? noteId : '');
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
