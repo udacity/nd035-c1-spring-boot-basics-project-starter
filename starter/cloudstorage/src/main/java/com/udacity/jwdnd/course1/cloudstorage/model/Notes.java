@@ -13,6 +13,7 @@ public class Notes {
         this.userid = userid;
     }
 
+
     public Notes(String notetitle, String notedescription, int userid) {
         this.notetitle = notetitle;
         this.notedescription = notedescription;
