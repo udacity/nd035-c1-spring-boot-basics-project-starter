@@ -16,7 +16,6 @@ public class SignupController {
     private final UserService userService;
 
     public SignupController(UserService userService) {
-        System.out.println("Built the SignupController");
         this.userService = userService;
     }
 
@@ -44,8 +43,9 @@ public class SignupController {
             model.addAttribute("signupSuccess", true);
         } else {
             model.addAttribute("signupError", signupError);
+            return "signup";
         }
 
-        return "signup";
+        return "login";
     }
 }
