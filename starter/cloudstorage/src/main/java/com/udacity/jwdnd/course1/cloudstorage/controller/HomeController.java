@@ -41,12 +41,24 @@ public class HomeController {
         System.out.println("We are adding a note!");
         System.out.println("The contents of homeForm 1: " + homeForm.getNoteTitle());
         System.out.println("The contents of homeForm 2: " + homeForm.getNoteDescription());
+        System.out.println("The contents of homeForm.noteAction: " + homeForm.getNoteAction());
+        System.out.println("The contents of homeForm.noteId: " + homeForm.getNoteId());
         homeForm.setUserId(getUserId());
-        homeService.addNote(homeForm);
+        if (homeForm.getNoteAction().equals("addNote")) {
+            homeService.addNote(homeForm);
+        } else {
+            System.out.println("Contents of noteId: " + homeForm.getNoteId());
+            homeService.updateNote(homeForm);
+        }
         model.addAttribute("resultSuccess", true);
         model.addAttribute("tab", "notes");
         model.addAttribute("nextAction", "home");
         return "result";
+    }
+
+    @RequestMapping("/editnote")
+    public String editNote() {
+        return "home";
     }
 
     private int getUserId() {

@@ -29,6 +29,10 @@ public class HomeService {
         return temp;
     }
 
+    public void updateNote(HomeForm homeForm) {
+        notesMapper.updateNotes(homeForm.getNoteId(), homeForm.getNoteTitle(), homeForm.getNoteDescription());
+    }
+
     public List<Notes> getAllNotes() {
         return notesMapper.findAllNotes();
     }
