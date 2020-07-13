@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -87,7 +88,34 @@ public class HomeController {
         return "result";
     }
 
+    @RequestMapping("/fileupload")
+    public String fileUpload(FileForm fileForm, Model model) throws IOException {
+        System.out.println("We are going to upload file...");
 
+        if (fileForm != null) {
+            System.out.println("The form is not NULL!");
+        }
+
+//        ModelAndView modelAndView = new ModelAndView("fileUpload");
+//        InputStream in = file.getInputStream();
+//        File currDir = new File(".");
+//        String path = currDir.getAbsolutePath();
+//        FileOutputStream f = new FileOutputStream(
+//                path.substring(0, path.length()-1)+ file.getOriginalFilename());
+//        int ch = 0;
+//        while ((ch = in.read()) != -1) {
+//            f.write(ch);
+//        }
+//
+//        f.flush();
+//        f.close();
+//
+//        modelAndView.getModel().put("message", "File uploaded successfully!");
+
+        int success = 1;
+        model.addAttribute("resultSuccess", (success == 1) ? true : false);
+        return "result";
+    }
 
     private int getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
