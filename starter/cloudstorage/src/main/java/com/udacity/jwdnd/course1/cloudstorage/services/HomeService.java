@@ -39,7 +39,7 @@ public class HomeService {
     }
 
     public List<Notes> getAllNotes(int userId) {
-        return notesMapper.findAllNotes(userId);
+        return notesMapper.findAllNotesByUserId(userId);
     }
 
     public int addCredentials(CredentialForm credentialForm) {
@@ -67,6 +67,6 @@ public class HomeService {
     }
 
     public List<Credentials> getAllCredentials(int userid) {
-        return credentialsMapper.getAllCredentials(userid);
+        return credentialsMapper.getAllCredentialsByUserId(userid);
     }
 }

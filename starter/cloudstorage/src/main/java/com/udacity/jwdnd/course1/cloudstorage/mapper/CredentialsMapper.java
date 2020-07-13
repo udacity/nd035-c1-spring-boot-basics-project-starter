@@ -15,7 +15,7 @@ public interface CredentialsMapper {
 
     @Select("SELECT credentialid, url, username, key, password, userid from CREDENTIALS " +
             "where userid = #{userid}")
-    public List<Credentials> getAllCredentials(int userid);
+    public List<Credentials> getAllCredentialsByUserId(int userid);
 
     @Update("UPDATE CREDENTIALS set url = #{url}, username = #{username}, key = #{key}, " +
             "password = #{password}, userid = #{userid} " +

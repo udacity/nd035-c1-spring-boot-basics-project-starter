@@ -14,7 +14,7 @@ public interface NotesMapper {
     public Integer insertNotes(Notes notes);
 
     @Select("SELECT * FROM notes where userid = #{userid}")
-    public List<Notes> findAllNotes(int userid);
+    public List<Notes> findAllNotesByUserId(int userid);
 
     @Update("UPDATE notes set notetitle = #{notetitle}, notedescription = #{notedescription} " +
             "where noteid = #{noteid} and userid = #{userid}")
