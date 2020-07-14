@@ -78,6 +78,7 @@ public class HomeService {
     }
 
     public List<Files> getAllFiles(int userid) {
+        System.out.println(">>> getAllFiles(" + userid + ")");
         return filesMapper.getAllFilesByUserId(userid);
     }
 }

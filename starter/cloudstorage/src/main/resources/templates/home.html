@@ -54,13 +54,13 @@
                                         <tr>
                                             <td>
                                                 <a th:action="@{/viewFile}" target="_blank" class="btn btn-success">View</a>
-                                                <a th:href="@{/deleteFile}" class="btn btn-danger">Delete</a>
+                                                <a th:href="@{/deletefile(fileid=${file.fileid})}" class="btn btn-danger">Delete</a>
                                             </td>
                                             <td>
                                                 <span th:text="${file.filename}">FileName</span>
                                             </td>
                                             <td>
-                                                <span th:text=""${file.}
+                                                <span th:text="${file.getFilesize()}">FileSize</span>
                                             </td>
                                         </tr>
                                     </div>

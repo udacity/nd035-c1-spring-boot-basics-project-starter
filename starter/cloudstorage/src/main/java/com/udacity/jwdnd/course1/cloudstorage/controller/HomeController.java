@@ -40,6 +40,7 @@ public class HomeController {
         allFiles = homeService.getAllFiles(getUserId());
         model.addAttribute("allNotes", allNotes);
         model.addAttribute("allCredentials", allCredentials);
+        model.addAttribute("allFiles", allFiles);
         System.out.println("<<< getHomePage");
         return "home";
     }

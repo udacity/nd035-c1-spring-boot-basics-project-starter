@@ -10,7 +10,7 @@ public interface CredentialsMapper {
 
     @Insert("INSERT into CREDENTIALS (url, username, key, password, userid) " +
             "values (#{url}, #{username}, #{key}, #{password}, #{userid})")
-    @Options(useGeneratedKeys = false, keyProperty = "#{credentialid}")
+    @Options(useGeneratedKeys = true, keyProperty = "credentialid")
     public Integer insertCredentials(Credentials credentials);
 
     @Select("SELECT credentialid, url, username, key, password, userid from CREDENTIALS " +

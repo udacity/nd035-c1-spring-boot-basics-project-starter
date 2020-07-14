@@ -9,7 +9,7 @@ import java.util.List;
 public interface FilesMapper {
     @Insert("INSERT into FILES (filename, contenttype, filesize, userid, filedata) " +
             "values (#{filename}, #{contenttype}, #{filesize}, #{userid}, #{filedata})")
-    @Options(useGeneratedKeys = false, keyProperty = "#{fileid}")
+    @Options(useGeneratedKeys = true, keyProperty = "fileId")
     public Integer insertFiles(Files files);
 
     @Select("SELECT fileid, filename, contenttype, filesize, userid, filedata from FILES " +

@@ -17,7 +17,6 @@ public class HomeForm {
     }
 
     public void setNoteId(String noteId) {
-        System.out.println("We are here in setNoteId + |" + noteId + "|");
         if ( ! noteId.isEmpty())
             this.noteId = Integer.parseInt(noteId);
     }
