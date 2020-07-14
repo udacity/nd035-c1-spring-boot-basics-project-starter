@@ -10,7 +10,7 @@ public interface NotesMapper {
 
     @Insert("INSERT into notes (notetitle, notedescription, userid) " +
             "values (#{notetitle}, #{notedescription}, #{userid})")
-    @Options(useGeneratedKeys = false, keyProperty = "#{noteid}")
+    @Options(useGeneratedKeys = true, keyProperty = "#{noteid}")
     public Integer insertNotes(Notes notes);
 
     @Select("SELECT * FROM notes where userid = #{userid}")

@@ -8,8 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,6 +24,7 @@ public class HomeController {
     HomeService homeService;
     List<Notes> allNotes;
     List<Credentials> allCredentials;
+    List<Files> allFiles;
 
     public HomeController(UserService userService, HomeService homeService) {
         System.out.println("Built the HomeController");
@@ -30,11 +34,13 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String getHomePage(HomeForm homeForm, Model model) {
-        System.out.println("We are in getHomePage!");
+        System.out.println(">>> getHomePage!");
         allNotes = homeService.getAllNotes(getUserId());
         allCredentials = homeService.getAllCredentials(getUserId());
+        allFiles = homeService.getAllFiles(getUserId());
         model.addAttribute("allNotes", allNotes);
         model.addAttribute("allCredentials", allCredentials);
+        System.out.println("<<< getHomePage");
         return "home";
     }
 
@@ -88,32 +94,26 @@ public class HomeController {
         return "result";
     }
 
-    @RequestMapping("/fileupload")
-    public String fileUpload(FileForm fileForm, Model model) throws IOException {
-        System.out.println("We are going to upload file...");
-
-        if (fileForm != null) {
-            System.out.println("The form is not NULL!");
+    @PostMapping("/fileupload")
+    public String uploadFile2(@RequestParam("fileUpload") MultipartFile file, Model model) throws IOException {
+        int success = 1;
+        // check if file is empty
+        if (file.isEmpty()) {
+            // TODO - supply a reason?
+            model.addAttribute("resultSuccess", (success != 1) ? true : false);
+            return "result";
         }
 
-//        ModelAndView modelAndView = new ModelAndView("fileUpload");
-//        InputStream in = file.getInputStream();
-//        File currDir = new File(".");
-//        String path = currDir.getAbsolutePath();
-//        FileOutputStream f = new FileOutputStream(
-//                path.substring(0, path.length()-1)+ file.getOriginalFilename());
-//        int ch = 0;
-//        while ((ch = in.read()) != -1) {
-//            f.write(ch);
-//        }
-//
-//        f.flush();
-//        f.close();
-//
-//        modelAndView.getModel().put("message", "File uploaded successfully!");
-
-        int success = 1;
+        Files files = new Files();
+        // normalize the file path
+        files.setFilename(StringUtils.cleanPath(file.getOriginalFilename()));
+        files.setFilesize("1000");
+        files.setContenttype(file.getContentType());
+        files.setUserid(getUserId());
+        files.setFiledata(file.getBytes());
+        success = homeService.addFiles(files);
         model.addAttribute("resultSuccess", (success == 1) ? true : false);
+
         return "result";
     }
 

@@ -3,10 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FilesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
-import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
-import com.udacity.jwdnd.course1.cloudstorage.model.HomeForm;
-import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
+import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +23,9 @@ public class HomeService {
 
     public int addNote(HomeForm homeForm) {
         Notes newNote = new Notes(homeForm.getNoteTitle(), homeForm.getNoteDescription(), homeForm.getUserId());
-        return notesMapper.insertNotes(newNote);
+        int valueReturned = notesMapper.insertNotes(newNote);
+        System.out.println("addNote - valueReturned: " + valueReturned);
+        return valueReturned;
     }
 
     public int updateNote(HomeForm homeForm) {
@@ -68,5 +67,17 @@ public class HomeService {
 
     public List<Credentials> getAllCredentials(int userid) {
         return credentialsMapper.getAllCredentialsByUserId(userid);
+    }
+
+    public int addFiles(Files files) {
+        System.out.println(">>> addFiles");
+        int fileid = filesMapper.insertFiles(files);
+        System.out.println("addFiles - id returned: " + fileid);
+        System.out.println("<<< addFiles");
+        return fileid;
+    }
+
+    public List<Files> getAllFiles(int userid) {
+        return filesMapper.getAllFilesByUserId(userid);
     }
 }

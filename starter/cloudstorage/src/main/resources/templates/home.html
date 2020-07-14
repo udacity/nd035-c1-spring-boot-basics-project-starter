@@ -45,17 +45,25 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 80%" scope="col">File Name</th>
+                                        <th style="width: 60%" scope="col">File Name</th>
+                                        <th style="width: 20%" scope="col">File Size</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <a th:action="@{/viewFile}" target="_blank" class="btn btn-success">View</a>
-                                        <a th:action="@{/deleteFile}" class="btn btn-danger">Delete</a>
-                                    </td>
-                                    <th scope="row">ExampleFile.txt</th>
-                                </tr>
+                                    <div id="allFiles" th:each="file : ${allFiles}">
+                                        <tr>
+                                            <td>
+                                                <a th:action="@{/viewFile}" target="_blank" class="btn btn-success">View</a>
+                                                <a th:href="@{/deleteFile}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                            <td>
+                                                <span th:text="${file.filename}">FileName</span>
+                                            </td>
+                                            <td>
+                                                <span th:text=""${file.}
+                                            </td>
+                                        </tr>
+                                    </div>
                                 </tbody>
                             </table>
                         </div>
