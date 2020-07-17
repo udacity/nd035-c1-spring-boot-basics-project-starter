@@ -6,9 +6,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HomeTests {
@@ -55,16 +58,49 @@ public class HomeTests {
         LoginPageObject loginPage = new LoginPageObject(driver);
         loginPage.login(username, password);
         loginPage.getSubmitButton().click();
-
-
     }
 
-    // TODO  figure out how to verify that the home page isn't accessable...
-    @Test
-    public void homePageNotAccesableNotLoggedIn() throws InterruptedException {
-//        signUpAndLogin();
+    private void getHomePage() {
         driver.get(BASE_URL + port + "/home");
         homePage = new HomePageObject(driver);
+    }
+
+    @Test
+    public void homePageNotAccessibleWhenNotLoggedIn() {
+        getHomePage();
+        String currentURL = driver.getCurrentUrl();
+        System.out.println("indexOf: " + currentURL.indexOf("home"));
+        System.out.println(currentURL);
+        assertTrue(currentURL.indexOf("home") == -1);
+    }
+
+    @Test
+    public void signUpLogInVerifyAccessHomeLogOutNoAccessHomePage() throws InterruptedException {
+        signUpAndLogin();
+        String currentURL = driver.getCurrentUrl();
+        assertTrue(currentURL.indexOf("home") >= 0);
+        getHomePage();
+        homePage.getLogOutButton().click();
+        currentURL = driver.getCurrentUrl();
+        // Make sure we did logout and on the login page
+        assertTrue(currentURL.indexOf("login") >= 0);
+        driver.get(BASE_URL + port + "/home");
+        currentURL = driver.getCurrentUrl();
+        assertTrue(currentURL.indexOf("login") >= 0);
+    }
+
+    @Test
+    public void createNoteAndSeeInList() throws InterruptedException {
+        signUpAndLogin();
+        Thread.sleep(5000);
+        getHomePage();
+        WebElement navNotesTab = homePage.getNavNotesTab();
+        if (navNotesTab == null) {
+            System.out.println("Why is this null???");
+            return;
+        }
+        Thread.sleep(5000);
+        homePage.getShowNoteModelButton().click();
         Thread.sleep(5000);
     }
 }

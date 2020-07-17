@@ -13,6 +13,9 @@ public class HomePageObject {
         System.out.println("<<< HomePageObject");
     }
 
+    @FindBy(id = "logOutButton")
+    private WebElement logOutButton;
+
     @FindBy(id = "logoutDiv")
     private WebElement logoutDiv;
 
@@ -128,6 +131,14 @@ public class HomePageObject {
 //        return chatMessage;
 //    }
 
+
+    public WebElement getLogOutButton() {
+        return logOutButton;
+    }
+
+    public void setLogOutButton(WebElement logOutButton) {
+        this.logOutButton = logOutButton;
+    }
 
     public WebElement getLogoutDiv() {
         return logoutDiv;
