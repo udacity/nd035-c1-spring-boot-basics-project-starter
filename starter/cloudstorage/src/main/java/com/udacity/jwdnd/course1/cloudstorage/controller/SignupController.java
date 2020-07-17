@@ -46,6 +46,6 @@ public class SignupController {
             return "signup";
         }
 
-        return "login";
+        return "redirect:/login";
     }
 }

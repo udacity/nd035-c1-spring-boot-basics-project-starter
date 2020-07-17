@@ -16,6 +16,14 @@ public interface FilesMapper {
             "where userid = #{userid}")
     public List<Files> getAllFilesByUserId(int userid);
 
+    @Select("SELECT fileid, filename, contenttype, filesize, userid, filedata from FILES " +
+            "where userid = #{userid} and fileid = #{fileid}")
+    public Files findFileByFileId(int userid, int fileid);
+
+    @Select("SELECT count(*) from FILES " +
+            "where userid = #{userid} and filename = #{filename}")
+    public int doesFileExist(int userid, String filename);
+
     @Update("UPDATE FILES set filename = #{filename}, contenttype = #{contenttype}, filesize = #{filesize}, userid = #{userid}, filedata = #{filedata} " +
             "where fileid = #{fileid} and userid = #{userid}")
     public int updateFile(Files files);

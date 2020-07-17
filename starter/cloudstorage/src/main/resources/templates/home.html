@@ -53,8 +53,8 @@
                                     <div id="allFiles" th:each="file : ${allFiles}">
                                         <tr>
                                             <td>
-                                                <a th:action="@{/viewFile}" target="_blank" class="btn btn-success">View</a>
-                                                <a th:href="@{/deletefile(fileid=${file.fileid})}" class="btn btn-danger">Delete</a>
+                                                <a th:href="@{/viewFile(fileid=${file.fileId})}" id="viewFileButton" class="btn btn-success">View</a>
+                                                <a th:href="@{/deletefile(fileid=${file.fileId})}" id="deleteFileButton" class="btn btn-danger">Delete</a>
                                             </td>
                                             <td>
                                                 <span th:text="${file.filename}">FileName</span>

@@ -22,7 +22,7 @@
             </div>
             <div th:if="${resultError}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
-                <span th:value="${resultErrorMsg}">Example Error Message</span>
+                <span th:text="${resultErrorMsg}">Example Error Message</span>
                 <!-- TODO - Should make it more dynamic to go whereever... -->
                 <span>Click <a id="errorContinue" th:href="@{/home}">here</a> to continue.</span>
 

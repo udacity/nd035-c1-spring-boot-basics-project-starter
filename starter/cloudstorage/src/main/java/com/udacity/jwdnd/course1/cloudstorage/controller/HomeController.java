@@ -3,15 +3,17 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import com.udacity.jwdnd.course1.cloudstorage.services.HomeService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -72,6 +74,7 @@ public class HomeController {
 
     @RequestMapping("/addOrUpdateCredentials")
     public String addOrUpdateCredentials(CredentialForm credentialForm, Model model) {
+        // TODO - need to decrypt the password when the user edits the dang thing...
         credentialForm.setUserId(getUserId());
         int success;
         if (credentialForm.getCredentialAction().equals("addCredential")) {
@@ -100,15 +103,23 @@ public class HomeController {
         int success = 1;
         // check if file is empty
         if (file.isEmpty()) {
-            // TODO - supply a reason?
-            model.addAttribute("resultSuccess", (success != 1) ? true : false);
+            // TODO - supply a reason for the error?
+            model.addAttribute("resultErrorMsg", "File is empty.");
+            model.addAttribute("resultError", true);
+            return "result";
+        }
+
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        if (homeService.doesFileExist(getUserId(), fileName)) {
+            model.addAttribute("resultErrorMsg", "File already exists.");
+            model.addAttribute("resultError", true);
             return "result";
         }
 
         Files files = new Files();
-        // normalize the file path
-        files.setFilename(StringUtils.cleanPath(file.getOriginalFilename()));
-        files.setFilesize("1000");
+        // normalize the file paterrorh
+        files.setFilename(fileName);
+        files.setFilesize("" + file.getSize());
         files.setContenttype(file.getContentType());
         files.setUserid(getUserId());
         files.setFiledata(file.getBytes());
@@ -116,6 +127,30 @@ public class HomeController {
         model.addAttribute("resultSuccess", (success == 1) ? true : false);
 
         return "result";
+    }
+
+    @RequestMapping("/deletefile")
+    public String deleteFile(@RequestParam String fileid, Model model) {
+        int id = Integer.parseInt(fileid);
+        int userid = getUserId();
+        int success = homeService.deleteFile(id, userid);
+        model.addAttribute("resultSuccess", (success == 1) ? true : false);
+        return "result";
+    }
+
+    // https://stackoverflow.com/questions/35480463/spring-display-pdf-file-in-browser-instead-of-downloading
+    @RequestMapping(value="/viewFile", method= RequestMethod.GET)
+    public ResponseEntity<byte[]> handleViewFile(@RequestParam String fileid, Model model) {
+        Files file = homeService.findFile(getUserId(), Integer.parseInt(fileid));
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.parseMediaType(file.getContenttype()));
+        headers.add("Content-Disposition", "inline; filename=" + file.getFilename());
+        headers.setContentDispositionFormData(file.getFilename(), file.getFilename());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(file.getFiledata(), headers, HttpStatus.OK);
+        return response;
     }
 
     private int getUserId() {
