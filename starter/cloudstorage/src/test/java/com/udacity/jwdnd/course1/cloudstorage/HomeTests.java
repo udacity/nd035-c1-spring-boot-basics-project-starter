@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -22,6 +24,7 @@ public class HomeTests {
     private HomePageObject homePage;
     private LoginPageObject loginPage;
     private SignupPageObject signupPage;
+    private ResultPageObject resultPage;
     private final String BASE_URL = "http://localhost:";
 
 
@@ -92,15 +95,43 @@ public class HomeTests {
     @Test
     public void createNoteAndSeeInList() throws InterruptedException {
         signUpAndLogin();
-        Thread.sleep(5000);
+        WebDriverWait wait = new WebDriverWait (driver, 500);
         getHomePage();
         WebElement navNotesTab = homePage.getNavNotesTab();
-        if (navNotesTab == null) {
-            System.out.println("Why is this null???");
-            return;
-        }
-        Thread.sleep(5000);
-        homePage.getShowNoteModelButton().click();
-        Thread.sleep(5000);
+
+        // wait till the webelement loads before performing an action on it.
+        wait.until(ExpectedConditions.elementToBeClickable(navNotesTab)).click();
+
+        WebElement addNoteModalButton = homePage.getShowNoteModelButton();
+        wait.until(ExpectedConditions.elementToBeClickable(addNoteModalButton)).click();
+
+        WebElement notesTitle = homePage.getNoteTitle();
+        wait.until(ExpectedConditions.elementToBeClickable(notesTitle));
+        notesTitle.sendKeys("This is the title of the note");
+
+        WebElement notesDescription = homePage.getNoteDescription();
+        wait.until(ExpectedConditions.elementToBeClickable(notesDescription));
+        notesDescription.sendKeys(("This is the description, if real, it would be interesting"));
+
+        WebElement noteSubmit = homePage.getSubmitNoteButtonFooter();
+        wait.until(ExpectedConditions.elementToBeClickable(noteSubmit));
+        noteSubmit.click();
+
+        // Click on Success/Continue on the result page
+
+        System.out.println("PageSource: " + driver.getPageSource());
+        Thread.sleep(10000);
+        driver.get(BASE_URL + port + "/result");
+        resultPage = new ResultPageObject(driver);
+
+        WebElement saveContinue = resultPage.getSaveContinue();
+        wait.until(ExpectedConditions.elementToBeClickable(saveContinue));
+        saveContinue.click();
+
+        // Click on the Logout button
+        // Try to navigate to home page
+        // Assert that the URL is login.
+
+        Thread.sleep(10000);
     }
 }

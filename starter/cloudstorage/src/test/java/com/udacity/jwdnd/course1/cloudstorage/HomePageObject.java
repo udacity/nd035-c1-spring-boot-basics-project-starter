@@ -19,6 +19,9 @@ public class HomePageObject {
     @FindBy(id = "logoutDiv")
     private WebElement logoutDiv;
 
+    @FindBy(id = "nav-tab")
+    private WebElement navTabs;
+
     @FindBy(id = "nav-files-tab")
     private WebElement navFilesTab;
 
@@ -146,6 +149,14 @@ public class HomePageObject {
 
     public void setLogoutDiv(WebElement logoutDiv) {
         this.logoutDiv = logoutDiv;
+    }
+
+    public WebElement getNavTabs() {
+        return navTabs;
+    }
+
+    public void setNavTabs(WebElement navTabs) {
+        this.navTabs = navTabs;
     }
 
     public WebElement getNavFilesTab() {
