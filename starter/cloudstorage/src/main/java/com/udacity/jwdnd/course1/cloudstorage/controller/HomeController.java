@@ -1,6 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.*;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
+import com.udacity.jwdnd.course1.cloudstorage.services.ExtendedCredentials;
 import com.udacity.jwdnd.course1.cloudstorage.services.HomeService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,14 +29,16 @@ public class HomeController {
 
     UserService userService;
     HomeService homeService;
+    EncryptionService encryptionService;
     List<Notes> allNotes;
-    List<Credentials> allCredentials;
+    List<ExtendedCredentials> allCredentials;
     List<Files> allFiles;
 
-    public HomeController(UserService userService, HomeService homeService) {
+    public HomeController(UserService userService, HomeService homeService, EncryptionService encryptionService) {
         System.out.println("Built the HomeController");
         this.userService = userService;
         this.homeService = homeService;
+        this.encryptionService = encryptionService;
     }
 
     @RequestMapping("/home")

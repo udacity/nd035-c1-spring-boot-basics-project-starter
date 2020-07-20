@@ -6,9 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import org.springframework.stereotype.Service;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +16,7 @@ public class HomeService {
     NotesMapper notesMapper;
     CredentialsMapper credentialsMapper;
     EncryptionService encryptionService;
+    String key = "Shhhhhhhhhhhhh!!";
 
     public HomeService(FilesMapper filesMapper, NotesMapper notesMapper, CredentialsMapper credentialsMapper, EncryptionService encryptionService) {
         this.filesMapper = filesMapper;
@@ -54,19 +53,9 @@ public class HomeService {
         Credentials newCredential = new Credentials();
         if (credentialForm.getCredentialId() != 0)
             newCredential.setCredentialid(credentialForm.getCredentialId());
-        KeyPairGenerator keyPairGenerator;
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            KeyPair pair = keyPairGenerator.generateKeyPair();
-            newCredential.setKey(pair.getPublic().getFormat());
-            System.out.println("The new key is: " + newCredential.getKey());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            newCredential.setKey("@()*&VKJH@#");
-        }
-        encryptionService.encryptValue(credentialForm.getPassword(), newCredential.getKey());
-        newCredential.setPassword(credentialForm.getPassword());
+        newCredential.setKey(key);
+        String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), newCredential.getKey());
+        newCredential.setPassword(encryptedPassword);
         newCredential.setUrl(credentialForm.getUrl());
         newCredential.setUsername(credentialForm.getUsername());
         newCredential.setUserid(credentialForm.getUserId());
@@ -81,16 +70,24 @@ public class HomeService {
         return credentialsMapper.deleteCredential(credentialid, userid);
     }
 
-    public List<Credentials> getAllCredentials(int userid) {
-        return credentialsMapper.getAllCredentialsByUserId(userid);
-    }
-
     public int addFiles(Files files) {
         System.out.println(">>> addFiles");
         int fileid = filesMapper.insertFiles(files);
         System.out.println("addFiles - id returned: " + fileid);
         System.out.println("<<< addFiles");
         return fileid;
+    }
+
+    public List<ExtendedCredentials> getAllCredentials(int userid) {
+        List<Credentials> credentialsList = credentialsMapper.getAllCredentialsByUserId(userid);
+        List<ExtendedCredentials> extendedCredentialsList = new ArrayList();
+        for (Credentials credentials: credentialsList ) {
+            String decrptyPassword = encryptionService.decryptValue(credentials.getPassword(), key);
+            ExtendedCredentials extendedCredentials = new ExtendedCredentials(credentials);
+            extendedCredentials.setDecryptedPassword(decrptyPassword);
+            extendedCredentialsList.add(extendedCredentials);
+        }
+        return extendedCredentialsList;
     }
 
     public List<Files> getAllFiles(int userid) {
@@ -110,5 +107,13 @@ public class HomeService {
         int doesExist = filesMapper.doesFileExist(userId, fileName);
         if (doesExist == 1) return true;
         return false;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

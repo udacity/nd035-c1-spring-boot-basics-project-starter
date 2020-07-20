@@ -99,10 +99,10 @@
                                                 <a id="deleteNote" th:href="@{/deletenote(noteid=${note.noteid})}" class="btn btn-danger">Delete</a>
                                             </td>
                                              <td>
-                                                <span th:text="${note.notetitle}">NoteTitle</span>
+                                                <span id="noteTitleList" th:text="${note.notetitle}">NoteTitle</span>
                                              </td>
                                              <td>
-                                                <span th:text="${note.notedescription}">Note Description</span>
+                                                <span id="noteDescriptionList" th:text="${note.notedescription}">Note Description</span>
                                              </td>
                                         </tr>
                                     </div>
@@ -148,7 +148,7 @@
                         </button>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <table class="table table-striped" th:object="${extendedCredentials}" id="credentialTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
@@ -158,31 +158,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <div id="allCredentials" th:each="credential : ${allCredentials}">
+                                    <div id="allCredentials" th:each="extendedCredential : ${allCredentials}">
                                         <tr>
                                             <td>
                                                 <button
                                                         id="editCredential"
-                                                        th:data-credentialId="${credential.credentialid}"
-                                                        th:data-url="${credential.url}"
-                                                        th:data-username="${credential.username}"
-                                                        th:data-password="${credential.password}"
+                                                        th:data-credentialId="${extendedCredential.credentialid}"
+                                                        th:data-url="${extendedCredential.url}"
+                                                        th:data-username="${extendedCredential.username}"
+                                                        th:data-password="${extendedCredential.decryptedPassword}"
                                                         type="button"
                                                         onclick="showCredentialModal('updateCredential', this.getAttribute('data-credentialId'),
                                                             this.getAttribute('data-url'), this.getAttribute('data-username'), this.getAttribute('data-password'))"
                                                         class="btn btn-success">Edit
                                                 </button>
 
-                                                <a id="deleteCredential" th:href="@{/deleteCredential(credentialid=${credential.credentialid})}" class="btn btn-danger">Delete</a>
+                                                <a id="deleteCredential" th:href="@{/deleteCredential(credentialid=${extendedCredential.credentialid})}" class="btn btn-danger">Delete</a>
                                             </td>
                                             <td>
-                                                <span th:text="${credential.url}">Credential URL</span>
+                                                <span id="credentailURLList" th:text="${extendedCredential.url}">Credential URL</span>
                                             </td>
                                             <td>
-                                                <span th:text="${credential.username}">Credential UserName</span>
+                                                <span id="credentialUserNameList" th:text="${extendedCredential.username}">Credential UserName</span>
                                             </td>
                                             <td>
-                                                <span th:text="${credential.password}">Credential PassWord</span>
+                                                <span id="credentialPasswordList" th:text="${extendedCredential.password}">Credential PassWord</span>
                                             </td>
                                         </tr>
                                     </div>

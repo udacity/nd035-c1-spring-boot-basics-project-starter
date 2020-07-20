@@ -13,6 +13,17 @@ public class HomePageObject {
         System.out.println("<<< HomePageObject");
     }
 
+    @FindBy(id = "savedContinue")
+    private WebElement saveContinueOnResult;
+
+    public WebElement getSaveContinueOnResult() {
+        return saveContinueOnResult;
+    }
+
+    public void setSaveContinueOnResult(WebElement saveContinueOnResult) {
+        this.saveContinueOnResult = saveContinueOnResult;
+    }
+
     @FindBy(id = "logOutButton")
     private WebElement logOutButton;
 
