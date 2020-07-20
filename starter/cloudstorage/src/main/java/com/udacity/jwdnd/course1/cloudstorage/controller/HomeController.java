@@ -35,7 +35,6 @@ public class HomeController {
     List<Files> allFiles;
 
     public HomeController(UserService userService, HomeService homeService, EncryptionService encryptionService) {
-        System.out.println("Built the HomeController");
         this.userService = userService;
         this.homeService = homeService;
         this.encryptionService = encryptionService;
@@ -43,14 +42,12 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String getHomePage(HomeForm homeForm, Model model) {
-        System.out.println(">>> getHomePage!");
         allNotes = homeService.getAllNotes(getUserId());
         allCredentials = homeService.getAllCredentials(getUserId());
         allFiles = homeService.getAllFiles(getUserId());
         model.addAttribute("allNotes", allNotes);
         model.addAttribute("allCredentials", allCredentials);
         model.addAttribute("allFiles", allFiles);
-        System.out.println("<<< getHomePage");
         return "home";
     }
 
@@ -71,7 +68,6 @@ public class HomeController {
 
     @RequestMapping("/deletenote")
     public String deleteNote(@RequestParam String noteid, Model model) {
-        System.out.println("We are here in deleteNote");
         int id = Integer.parseInt(noteid);
         int userid = getUserId();
         int success = homeService.deleteNote(id, userid);
@@ -97,7 +93,6 @@ public class HomeController {
 
     @RequestMapping("/deleteCredential")
     public String deleteCredentials(@RequestParam String credentialid, Model model) {
-        System.out.println("We are here in deleteCredentials");
         int id = Integer.parseInt(credentialid);
         int userid = getUserId();
         int success = homeService.deleteCredential(id, userid);

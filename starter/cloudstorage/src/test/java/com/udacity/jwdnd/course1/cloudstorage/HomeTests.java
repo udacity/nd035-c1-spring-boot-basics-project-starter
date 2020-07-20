@@ -59,8 +59,6 @@ public class HomeTests {
     public void homePageNotAccessibleWhenNotLoggedIn() {
         getHomePage();
         String currentURL = driver.getCurrentUrl();
-        System.out.println("indexOf: " + currentURL.indexOf("home"));
-        System.out.println(currentURL);
         assertTrue(currentURL.indexOf("home") == -1);
     }
 
@@ -107,7 +105,6 @@ public class HomeTests {
         // Get the first Edit button
         Thread.sleep(3000);
         List<WebElement> allEditNote = driver.findElements(By.id("editNote"));
-        System.out.println("Size of list: " + allEditNote.size());
         WebElement firstEditButton = allEditNote.get(0);
         // Click the Edit Button
         waitAndClick(wait, firstEditButton);
@@ -148,7 +145,6 @@ public class HomeTests {
         Thread.sleep(3000);
         List<WebElement> allDeleteNoteButtons = driver.findElements(By.id("deleteNote"));
         int originalSizeBeforeDelete = allDeleteNoteButtons.size();
-        System.out.println("Size of list: " + allDeleteNoteButtons.size());
         WebElement firstDeleteButton = allDeleteNoteButtons.get(0);
         // Click the Edit Button
         waitAndClick(wait, firstDeleteButton);
@@ -194,7 +190,6 @@ public class HomeTests {
         // Get the first Edit button
         Thread.sleep(3000);
         List<WebElement> allEditCredential = driver.findElements(By.id("editCredential"));
-        System.out.println("Size of list: " + allEditCredential.size());
         WebElement firstEditButton = allEditCredential.get(0);
         // Click the Edit Button
         waitAndClick(wait, firstEditButton);
@@ -234,7 +229,6 @@ public class HomeTests {
         Thread.sleep(3000);
         List<WebElement> allDeleteCredentialButtons = driver.findElements(By.id("deleteCredential"));
         int originalSizeBeforeDelete = allDeleteCredentialButtons.size();
-        System.out.println("Size of list: " + allDeleteCredentialButtons.size());
         WebElement firstDeleteButton = allDeleteCredentialButtons.get(0);
         // Click the Edit Button
         waitAndClick(wait, firstDeleteButton);
@@ -244,9 +238,8 @@ public class HomeTests {
         waitAndClick(wait, homePage.getNavCredentialsTab());
         // Verify the title has changed
         // Get the list
-        Thread.sleep(10000);
+        Thread.sleep(3000);
         List<WebElement> credentailURLList = driver.findElements(By.id("credentailURLList"));
-        System.out.println("Size of URL list is: " + credentailURLList.size());
         // Verify the item is in the list
         assertTrue((originalSizeBeforeDelete == (credentailURLList.size() + 1)));
         String url = credentailURLList.get(0).getText();
@@ -275,7 +268,6 @@ public class HomeTests {
     }
 
     private void signUpAndLogin(String userName, String passWord) throws InterruptedException {
-        System.out.println(">>> signUpAndLogin");
         signupPage = new SignupPageObject(driver);
         driver.get(BASE_URL + port + "/signup");
 

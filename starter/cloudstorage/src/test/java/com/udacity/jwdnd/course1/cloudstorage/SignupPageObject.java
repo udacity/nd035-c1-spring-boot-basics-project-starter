@@ -36,9 +36,7 @@ public class SignupPageObject {
     }
 
     public SignupPageObject(WebDriver driver) {
-        System.out.println(">>> SignupPageObject");
         PageFactory.initElements(driver, this);
-        System.out.println("<<< SignupPageObject");
     }
 
     public WebElement getInputFirstName() {

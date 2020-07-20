@@ -8,6 +8,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ResultController {
 
     public ResultController() {
-        System.out.println("Built the ResultController");
     }
 }

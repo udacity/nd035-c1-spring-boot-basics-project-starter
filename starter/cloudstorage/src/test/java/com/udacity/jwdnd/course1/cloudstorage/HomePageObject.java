@@ -8,9 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 public class HomePageObject {
 
     public HomePageObject(WebDriver driver) {
-        System.out.println(">>> HomePageObject");
         PageFactory.initElements(driver, this);
-        System.out.println("<<< HomePageObject");
     }
 
     @FindBy(id = "savedContinue")
@@ -131,20 +129,6 @@ public class HomePageObject {
 
     @FindBy(id = "saveCredentialFooter")
     private WebElement saveCredentialFooter;
-
-//    public void sendChatMessage(String messageText) {
-//        System.out.println(">>> sendChatMessage");
-//        this.getMessageText().sendKeys(messageText);
-//        System.out.println("Inside sendChatMessage");
-//        this.messageText.submit();
-//        System.out.println("<<< sendChatMessage");
-//    }
-
-//    public ChatMessage getFirstMessage() {
-//        ChatMessage chatMessage = new ChatMessage(chatMessages.get(0).getText());
-//        return chatMessage;
-//    }
-
 
     public WebElement getLogOutButton() {
         return logOutButton;

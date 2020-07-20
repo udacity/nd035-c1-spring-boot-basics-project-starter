@@ -28,7 +28,6 @@ public class HomeService {
     public int addNote(HomeForm homeForm) {
         Notes newNote = new Notes(homeForm.getNoteTitle(), homeForm.getNoteDescription(), homeForm.getUserId());
         int valueReturned = notesMapper.insertNotes(newNote);
-        System.out.println("addNote - valueReturned: " + valueReturned);
         return valueReturned;
     }
 
@@ -71,10 +70,7 @@ public class HomeService {
     }
 
     public int addFiles(Files files) {
-        System.out.println(">>> addFiles");
         int fileid = filesMapper.insertFiles(files);
-        System.out.println("addFiles - id returned: " + fileid);
-        System.out.println("<<< addFiles");
         return fileid;
     }
 
@@ -91,7 +87,6 @@ public class HomeService {
     }
 
     public List<Files> getAllFiles(int userid) {
-        System.out.println(">>> getAllFiles(" + userid + ")");
         return filesMapper.getAllFilesByUserId(userid);
     }
 

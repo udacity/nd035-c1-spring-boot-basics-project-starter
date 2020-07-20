@@ -17,7 +17,6 @@ public class CredentialForm {
     }
 
     public void setCredentialId(String credentialId) {
-        System.out.println("Contents of credentialId:|" + credentialId + "|");
         if ( ! credentialId.isEmpty())
             this.credentialId = Integer.parseInt(credentialId);
     }

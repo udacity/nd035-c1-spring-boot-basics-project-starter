@@ -44,7 +44,6 @@ class OverviewTests {
         loginPage.getSubmitButton().click();
         Thread.sleep(1000);
         String myErrorMsg = loginPage.getErrorMsg().getText();
-        System.out.println("Error Message: " + myErrorMsg);
         assertEquals("Invalid username or password", myErrorMsg);
         Thread.sleep(5000);
     }
@@ -59,13 +58,8 @@ class OverviewTests {
         signupPage.getInputUsername().sendKeys("fs");
         signupPage.getInputPassword().sendKeys("fs");
         signupPage.getSubmitButton().click();
-        // TODO - verify that the link to go back to the login is there???
-        // TODO - what contains the bit when a field is required???
-//        WebElement errorMsg = signupPage.getErrorMsg();
-//        System.out.println("Error Msg: " + errorMsg.getText());
         WebElement goBack = signupPage.getLoginLink();
         Assertions.assertNotNull(goBack);
-        Thread.sleep(10000);
     }
 
     @Test
