@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/starter/cloudstorage/cloudstorage.iml" filepath="$PROJECT_DIR$/starter/cloudstorage/cloudstorage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/nd035-c1-spring-boot-basics-project-starter.iml" filepath="$PROJECT_DIR$/.idea/nd035-c1-spring-boot-basics-project-starter.iml" />
+    </modules>
+  </component>
+</project>
