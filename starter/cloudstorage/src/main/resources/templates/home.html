@@ -11,7 +11,7 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
             <div id="logoutDiv">
-                <form action="#" id="logout" th:action="@{/logout}" method="POST">
+                <form  id="logout" th:action="@{/logout}" method="POST">
                     <button type="submit" class="btn btn-secondary float-right" id="logOutButton">Logout</button>
                 </form>
             </div>
@@ -25,7 +25,7 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <form action="#" th:action="@{/fileupload}" enctype="multipart/form-data" method="POST">
+                        <form  th:action="@{/fileupload}" enctype="multipart/form-data" method="POST">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
                                     <div class="col-sm-2">
@@ -120,7 +120,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/addOrUpdateNote}" method="POST">
+                                        <form  th:action="@{/addOrUpdateNote}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <input type="hidden" name="noteAction" id="note-action">
                                             <div class="form-group">
@@ -200,7 +200,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/addOrUpdateCredentials}" method="POST">
+                                        <form  th:action="@{/addOrUpdateCredentials}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <input type="hidden" name="credentialAction" id="credential-action">
                                             <div class="form-group">

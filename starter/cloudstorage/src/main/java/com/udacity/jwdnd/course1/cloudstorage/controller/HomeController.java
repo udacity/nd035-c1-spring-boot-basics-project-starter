@@ -118,6 +118,12 @@ public class HomeController {
             return "result";
         }
 
+        if (file.getSize() >= 1000000) {
+            model.addAttribute("resultErrorMsg", "File size is too large");
+            model.addAttribute("resultError", true);
+            return "result";
+        }
+
         Files files = new Files();
         // normalize the file paterrorh
         files.setFilename(fileName);
