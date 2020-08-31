@@ -10,11 +10,32 @@ public class HomePage {
     @FindBy(id = "logout-button")
     private WebElement logoutButton;
 
+    @FindBy(id = "fileUpload")
+    private WebElement fileUploadField;
+
+    @FindBy(id = "upload-button")
+    private WebElement uploadButton;
+
+    @FindBy(id = "download-link")
+    private WebElement download;
+
+    @FindBy(id = "delete-link")
+    private WebElement delete;
+
     public HomePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
     public void logout() {
         logoutButton.click();
+    }
+
+    public void upload(String fileUrl) {
+        fileUploadField.sendKeys(fileUrl);
+        uploadButton.click();
+    }
+
+    public void delete() {
+        delete.click();
     }
 }
