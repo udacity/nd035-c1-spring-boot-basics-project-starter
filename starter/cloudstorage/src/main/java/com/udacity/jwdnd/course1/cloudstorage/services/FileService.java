@@ -32,22 +32,14 @@ public class FileService {
     public Message uploadFile(FileForm file)  {
         String filename = StringUtils.cleanPath(file.getFileUpload().getOriginalFilename());
 
-        Message message = new Message();
-
         if (file.getFileUpload().isEmpty()) {
-            message.setError(true);
-            message.setSuccess(false);
-            message.setMsg("Failed to store empty file.");
 
-            return message;
+            return new Message(true, false, "Failed to store empty file.");
 
         }
 
         if (filename.contains("..")) {
-            message.setError(true);
-            message.setSuccess(false);
-            message.setMsg("Cannot store file with relative path outside current directory " + filename);
-            return message;
+            return new Message(true, false, "Cannot store file with relative path outside current directory " + filename);
         }
 
         String username = UserService.getLoggedInUsername();
@@ -57,10 +49,7 @@ public class FileService {
 
         for (File fileName: fileList) {
             if (fileName.getFileName().equals(filename)) {
-                message.setError(true);
-                message.setSuccess(false);
-                message.setMsg("File already exists: " + filename);
-                return message;
+                return new Message(true, false, "File already exists: " + filename);
             }
         }
 
@@ -73,53 +62,40 @@ public class FileService {
         try {
             fileSave.setFileData(file.getFileUpload().getBytes());
         } catch (IOException e) {
-            message.setError(true);
-            message.setSuccess(false);
-            message.setMsg("Error uploading file " + e.getMessage());
 
             e.printStackTrace();
-        }
 
+            return new Message(true, false, "Error uploading file " + e.getMessage());
+
+        }
 
         fileSave.setUserId(user.getUserId());
 
         fileMapper.insert(fileSave);
 
-        message.setError(false);
-        message.setSuccess(true);
-        message.setMsg("File upload successful!");
-
-        return message;
+        return new Message(false, true, "File upload successful!");
 
 
     }
 
     public Message deleteFile(Integer fileId) {
 
-        Message message = new Message();
 
         File file = fileMapper.getFileById(fileId);
 
         if (file == null) {
-            message.setError(true);
-            message.setSuccess(false);
-            message.setMsg("File does not exist");
 
-            return message;
+            return new Message(true, false, "File does not exist");
         }
 
         User user = userService.getUser(UserService.getLoggedInUsername());
 
         if (file.getUserId().equals(user.getUserId())) {
-            fileMapper.delete(fileId);
-            message.setError(false);
-            message.setSuccess(true);
-            message.setMsg("File successfully deleted");
 
-            return message;
+            return new Message(false, true, "File successfully deleted");
         }
 
-        return message;
+        return new Message(true, false, "Unable to delete file.");
     }
 
     public File getFile(Integer id) {

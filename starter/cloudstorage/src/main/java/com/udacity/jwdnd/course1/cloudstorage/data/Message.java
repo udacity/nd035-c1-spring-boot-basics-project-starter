@@ -9,6 +9,15 @@ public class Message {
     private boolean success;
     private String msg;
 
+    public Message() {
+
+    }
+
+    public Message(boolean error, boolean success, String msg) {
+        this.error = error;
+        this.success = success;
+        this.msg = msg;
+    }
 
     public boolean isError() {
         return error;
