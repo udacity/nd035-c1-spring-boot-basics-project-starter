@@ -1,6 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.data.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.data.FileForm;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,11 @@ public class HomeController {
 
 
     private FileService fileService;
+    private CredentialService credentialService;
 
-    public HomeController(FileService fileService) {
+    public HomeController(FileService fileService, CredentialService credentialService) {
         this.fileService = fileService;
+        this.credentialService = credentialService;
     }
 
     @GetMapping
@@ -31,6 +35,7 @@ public class HomeController {
 //            model.addAttribute("fileList", fileService.getFiles());
 //        }
         model.addAttribute("fileList", fileService.getFiles());
+        model.addAttribute("credentialList", credentialService.getCredentials());
         return "home";
     }
 
@@ -39,5 +44,12 @@ public class HomeController {
         FileForm fileForm = new FileForm();
         fileForm.setFileUpload(null);
         return fileForm;
+    }
+
+    @ModelAttribute("credentialForm")
+    public CredentialForm initCredentialForm() {
+        CredentialForm credentialForm = new CredentialForm(null, null, null, null, null, null);
+
+        return credentialForm;
     }
 }
