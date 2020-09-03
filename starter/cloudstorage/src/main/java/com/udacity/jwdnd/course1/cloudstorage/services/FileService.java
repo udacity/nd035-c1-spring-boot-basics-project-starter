@@ -92,6 +92,8 @@ public class FileService {
 
         if (file.getUserId().equals(user.getUserId())) {
 
+            fileMapper.delete(fileId);
+
             return new Message(false, true, "File successfully deleted");
         }
 
