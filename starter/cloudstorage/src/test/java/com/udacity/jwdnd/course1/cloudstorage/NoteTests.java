@@ -107,6 +107,12 @@ public class NoteTests {
 
         notePage.editNote(driver, "Todo 1", "Add login feature");
 
+        resultPage = new ResultPage(driver);
+
+        String successMsg = resultPage.getSuccessMsg();
+
+        assertEquals("Note successfully edited!", successMsg);
+
         driver.get(baseUrl + "/home");
 
         final Map<String, String> notes = notePage.getNote(driver);
