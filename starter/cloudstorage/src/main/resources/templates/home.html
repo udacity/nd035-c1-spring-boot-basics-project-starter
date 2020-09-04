@@ -168,7 +168,7 @@
                                             Edit
                                         </button>
                                         <input type="hidden" name="userId" id="credential-user-id-value" th:value="${credential.userId}">
-                                        <a th:href="@{/api/credential/delete(id=${credential.credentialId})}" class="btn btn-danger">Delete</a>
+                                        <a id="delete-credential-link" th:href="@{/api/credential/delete(id=${credential.credentialId})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th scope="row" id="url-value" th:text="${credential.url}">Example Credential URL</th>
                                     <td id="username-value" th:text="${credential.username}">Example Credential Username</td>

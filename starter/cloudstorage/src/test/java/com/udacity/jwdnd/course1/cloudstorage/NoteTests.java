@@ -124,13 +124,12 @@ public class NoteTests {
 
         notePage.deleteNote(driver);
 
-        driver.get(baseUrl + "/home");
+        String actualUrl = driver.getCurrentUrl();
 
-        final Map<String, String> notes = notePage.getNote(driver);
+        resultPage = new ResultPage(driver);
 
-        assertAll(
-                () -> assertEquals("", notes.get("title")),
-                () -> assertEquals("", notes.get("desc"))
-        );
+        String successMsg = resultPage.getSuccessMsg();
+
+        assertEquals("Note successfully deleted.", successMsg);
     }
 }
