@@ -84,14 +84,39 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <button id="edit-note-button" type="button" class="btn btn-success">Edit</button>
-                                <a id="delete-note-link" class="btn btn-danger">Delete</a>
-                            </td>
-                            <th id="note-title-text"scope="row">Example Note Title</th>
-                            <td id="note-desc-text">Example Note Description </td>
-                        </tr>
+                        <div th:unless="${#lists.isEmpty(noteList)}">
+                            <div th:each="note : ${noteList}" >
+                                <tr>
+                                    <td>
+                                        <button
+                                                id="edit-note-button"
+                                                type="button"
+                                                class="btn btn-success"
+                                                th:noteId="${note.noteId}"
+                                                th:noteTitle="${note.noteTitle}"
+                                                th:noteDescription="${note.noteDescription}"
+                                                th:noteUserId="${note.userId}"
+
+                                                onclick="showNoteModal(
+                                            this.getAttribute('noteId'),
+                                            this.getAttribute('noteTitle'),
+                                            this.getAttribute('noteDescription'),
+                                            this.getAttribute('noteUserId')
+
+                                        )"
+
+
+                                        >
+                                            Edit
+
+                                        </button>
+                                        <a id="delete-note-link" class="btn btn-danger">Delete</a>
+                                    </td>
+                                    <th id="note-title-text" th:text="${note.noteTitle}"scope="row">Example Note Title</th>
+                                    <td id="note-desc-text" th:text="${note.noteDescription}">Example Note Description </td>
+                                </tr>
+                            </div>
+                        </div>
                         </tbody>
                     </table>
                 </div>
@@ -164,7 +189,7 @@
                                                     this.getAttribute('data-decryptedPassword'),
                                                     this.getAttribute('data-credentialUserId')
                                                 )"
-                                                >
+                                        >
                                             Edit
                                         </button>
                                         <input type="hidden" name="userId" id="credential-user-id-value" th:value="${credential.userId}">
@@ -249,7 +274,6 @@
             // For opening the edit credentials modal
             function showEditCredentialModal(credentialId, url, username, decryptedPassword, credentialUserId) {
 
-                console.log("credentialId ", credentialId);
 
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-user-id').val(credentialUserId ? credentialUserId : '');

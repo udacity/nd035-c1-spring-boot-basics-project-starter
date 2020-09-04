@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.data.FileForm;
 import com.udacity.jwdnd.course1.cloudstorage.data.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
 
+    @Autowired
     private FileService fileService;
+
+    @Autowired
     private CredentialService credentialService;
 
-    public HomeController(FileService fileService, CredentialService credentialService) {
-        this.fileService = fileService;
-        this.credentialService = credentialService;
-    }
+    @Autowired
+    private NoteService noteService;
 
     @GetMapping
     public String home(Model model) {
@@ -37,6 +39,7 @@ public class HomeController {
 //        }
         model.addAttribute("fileList", fileService.getFiles());
         model.addAttribute("credentialList", credentialService.getCredentials());
+        model.addAttribute("noteList", noteService.getNotes());
         return "home";
     }
 

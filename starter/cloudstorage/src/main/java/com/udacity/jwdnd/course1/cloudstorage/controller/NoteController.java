@@ -19,8 +19,11 @@ public class NoteController {
         System.out.println(noteForm);
 
         Message message = null;
+
         if (noteForm.getNoteId() == null) {
             message = noteService.addNote(noteForm);
+        } else {
+            message = noteService.editNote(noteForm);
         }
 
         model.addAttribute("message", message.getMsg());
