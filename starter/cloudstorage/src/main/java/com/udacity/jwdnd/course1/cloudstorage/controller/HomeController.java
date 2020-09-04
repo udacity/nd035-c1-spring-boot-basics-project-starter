@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.data.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.data.FileForm;
+import com.udacity.jwdnd.course1.cloudstorage.data.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -51,5 +52,11 @@ public class HomeController {
         CredentialForm credentialForm = new CredentialForm(null, null, null, null, null, null);
 
         return credentialForm;
+    }
+
+    @ModelAttribute("noteForm")
+    public NoteForm initNoteForm() {
+        NoteForm noteForm = new NoteForm();
+        return noteForm;
     }
 }

@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.data;
 
-public class Note {
+public class NoteForm {
+
     private Integer noteId;
     private String noteTitle;
     private String noteDescription;
@@ -36,5 +37,15 @@ public class Note {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "NoteForm{" +
+                "noteId=" + noteId +
+                ", noteTitle='" + noteTitle + '\'' +
+                ", noteDescription='" + noteDescription + '\'' +
+                ", userId=" + userId +
+                '}';
     }
 }
