@@ -21,7 +21,7 @@ public class FileTests {
     private static WebDriver driver;
     private SignupPage signupPage;
     private LoginPage loginPage;
-    private HomePage homePage;
+    private FileObject fileObject;
     private ResultPage resultPage;
     public String baseUrl;
 
@@ -67,9 +67,9 @@ public class FileTests {
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        fileObject = new FileObject(driver);
 
-        homePage.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
+        fileObject.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
 
         String actualUrl = driver.getCurrentUrl();
 
@@ -89,15 +89,15 @@ public class FileTests {
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        fileObject = new FileObject(driver);
 
-        homePage.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
+        fileObject.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        fileObject = new FileObject(driver);
 
-        homePage.delete();
+        fileObject.delete();
 
         String actualUrl = driver.getCurrentUrl();
 
@@ -117,17 +117,17 @@ public class FileTests {
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        fileObject = new FileObject(driver);
 
-        homePage.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
+        fileObject.upload("/Users/sami/Desktop/Screen Shot 2020-08-20 at 12.24.07 PM.png");
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        fileObject = new FileObject(driver);
 
         String filename = "Screen Shot 2020-08-20 at 12.24.07 PM.png";
 
-        homePage.upload("/Users/sami/Desktop/" + filename);
+        fileObject.upload("/Users/sami/Desktop/" + filename);
 
         String actualUrl = driver.getCurrentUrl();
 

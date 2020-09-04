@@ -22,7 +22,7 @@ public class CredentialTest {
     private static WebDriver driver;
     private SignupPage signupPage;
     private LoginPage loginPage;
-    private HomePage homePage;
+    private CredentialPage credentialPage;
     private ResultPage resultPage;
     public String baseUrl;
 
@@ -66,15 +66,15 @@ public class CredentialTest {
 
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        credentialPage = new CredentialPage(driver);
 
-        homePage.addCredential(driver, "http://maincoders.com", "samsino", "pa$$w0rd");
+        credentialPage.addCredential(driver, "http://maincoders.com", "samsino", "pa$$w0rd");
 
         driver.get(baseUrl + "/home");
 
 //        homePage = new HomePage(driver);
 
-        final Map<String, String> credential = homePage.getCredential(driver);
+        final Map<String, String> credential = credentialPage.getCredential(driver);
 
         assertAll(
                 () -> assertEquals("http://maincoders.com", credential.get("url")),
@@ -82,24 +82,62 @@ public class CredentialTest {
                 () -> assertNotEquals("pa$$w0rd", credential.get("password"))
         );
 
+
+
+
+
+    }
+
+    @Test
+    void editCredential() {
+        userSignupAndLogin();
+
         driver.get(baseUrl + "/home");
 
-        homePage = new HomePage(driver);
+        credentialPage = new CredentialPage(driver);
 
-        homePage.editCredential(driver, "http://maincoders.com/login", "sam","pa$$w0rd");
+        credentialPage.addCredential(driver, "http://maincoders.com", "samsino", "pa$$w0rd");
 
         driver.get(baseUrl + "/home");
 
-        final Map<String, String> updatedCredential = homePage.getCredential(driver);
+        credentialPage = new CredentialPage(driver);
+
+        credentialPage.editCredential(driver, "http://maincoders.com/login", "sam","pa$$w0rd");
+
+        driver.get(baseUrl + "/home");
+
+        final Map<String, String> updatedCredential = credentialPage.getCredential(driver);
 
         assertAll(
-                () -> assertEquals("http://maincoders.com/login", credential.get("url")),
-                () -> assertEquals("sam", credential.get("username")),
-                () -> assertNotEquals("pa$$w0rd", credential.get("password"))
+                () -> assertEquals("http://maincoders.com/login", updatedCredential.get("url")),
+                () -> assertEquals("sam", updatedCredential.get("username")),
+                () -> assertNotEquals("pa$$w0rd", updatedCredential.get("password"))
         );
 
+    }
 
+    @Test
+    void deleteCredential() {
 
+        userSignupAndLogin();
+
+        driver.get(baseUrl + "/home");
+
+        credentialPage = new CredentialPage(driver);
+
+        credentialPage.addCredential(driver, "http://maincoders.com", "samsino", "pa$$w0rd");
+
+        driver.get(baseUrl + "/home");
+
+        credentialPage.deleteCredential(driver);
+
+        String actualUrl = driver.getCurrentUrl();
+
+        resultPage = new ResultPage(driver);
+
+        String successMsg = resultPage.getSuccessMsg();
+
+        assertEquals("Delete credential was successful", successMsg);
     }
 
 }
