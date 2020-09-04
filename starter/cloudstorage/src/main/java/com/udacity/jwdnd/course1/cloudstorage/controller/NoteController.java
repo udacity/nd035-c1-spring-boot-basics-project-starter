@@ -6,7 +6,9 @@ import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class NoteController {
@@ -30,6 +32,18 @@ public class NoteController {
         model.addAttribute("success", message.isSuccess());
         model.addAttribute("error", message.isError());
         
+
+        return "result";
+    }
+
+    @GetMapping("/delete/note")
+    public String deleteNote(@RequestParam("id") Integer id, Model model) {
+
+        Message message = noteService.deleteNote(id);
+
+        model.addAttribute("message", message.getMsg());
+        model.addAttribute("success", message.isSuccess());
+        model.addAttribute("error", message.isError());
 
         return "result";
     }

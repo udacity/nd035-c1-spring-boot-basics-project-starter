@@ -54,7 +54,7 @@ public class NoteService {
 
         Note note = noteMapper.getNote(noteForm.getNoteId());
 
-        if (note.getNoteId().equals(user.getUserId())) {
+        if (note.getUserId().equals(user.getUserId())) {
 
             Note updateNote = new Note();
 
@@ -68,5 +68,20 @@ public class NoteService {
             return new Message(false, true,"Note successfully edited!");
         }
         return new Message(true, false,"Unable to edit note. Please make sure you have the right authorization");
+    }
+
+    public Message deleteNote(Integer id) {
+        String username = UserService.getLoggedInUsername();
+        User user = userService.getUser(username);
+
+        Note note = noteMapper.getNote(id);
+
+        if (note.getUserId().equals(user.getUserId())) {
+            noteMapper.delete(id);
+
+            return new Message(false, true,"Note successfully deleted!");
+        }
+
+        return new Message(true, false,"Unable to delete note. Please make sure you have the right authorization");
     }
 }

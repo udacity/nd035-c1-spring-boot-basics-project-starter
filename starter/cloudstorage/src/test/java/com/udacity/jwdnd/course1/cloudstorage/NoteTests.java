@@ -144,6 +144,6 @@ public class NoteTests {
 
         String successMsg = resultPage.getSuccessMsg();
 
-        assertEquals("Note successfully deleted.", successMsg);
+        assertEquals("Note successfully deleted!", successMsg);
     }
 }

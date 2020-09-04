@@ -110,7 +110,7 @@
                                             Edit
 
                                         </button>
-                                        <a id="delete-note-link" class="btn btn-danger">Delete</a>
+                                        <a id="delete-note-link" th:href="@{/delete/note(id=${note.noteId})}"class="btn btn-danger">Delete</a>
                                     </td>
                                     <th id="note-title-text" th:text="${note.noteTitle}"scope="row">Example Note Title</th>
                                     <td id="note-desc-text" th:text="${note.noteDescription}">Example Note Description </td>
