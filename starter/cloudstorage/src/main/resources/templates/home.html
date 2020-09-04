@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                <button style="margin: 0.25em;" id="add-note-button" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                     + Add a New Note
                 </button>
 
@@ -86,11 +86,11 @@
                         <tbody>
                         <tr>
                             <td>
-                                <button type="button" class="btn btn-success">Edit</button>
-                                <a class="btn btn-danger">Delete</a>
+                                <button id="edit-note-button" type="button" class="btn btn-success">Edit</button>
+                                <a id="delete-note-link" class="btn btn-danger">Delete</a>
                             </td>
-                            <th scope="row">Example Note Title</th>
-                            <td>Example Note Description </td>
+                            <th id="note-title-text"scope="row">Example Note Title</th>
+                            <td id="note-desc-text">Example Note Description </td>
                         </tr>
                         </tbody>
                     </table>
