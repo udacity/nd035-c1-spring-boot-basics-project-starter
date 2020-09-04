@@ -71,6 +71,14 @@ public class NoteTests {
 
         notePage.addNote(driver, "Todo", "finalize ecommerce website");
 
+        String actualUrl = driver.getCurrentUrl();
+
+        resultPage = new ResultPage(driver);
+
+        String successMsg = resultPage.getSuccessMsg();
+
+        assertEquals("Note successfully added!", successMsg);
+
         driver.get(baseUrl + "/home");
 
         final Map<String, String> notes = notePage.getNote(driver);
