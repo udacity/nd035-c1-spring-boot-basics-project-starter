@@ -15,7 +15,7 @@
     <description>Final Project for Udacity's Spring Boot Basics course.</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
