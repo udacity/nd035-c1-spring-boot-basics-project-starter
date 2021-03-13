@@ -1,5 +1,7 @@
-package com.udacity.jwdnd.course1.cloudstorage.controllers;
+package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.constants.Attributes;
+import com.udacity.jwdnd.course1.cloudstorage.constants.Templates;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.HashService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -17,15 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class SignupController {
 
-  private static final String SUCCESS_FIELD = "success";
-  private static final String ERROR_FIELD = "error";
-  private static final String SIGNUP_TEMPLATE_NAME = "signup";
   private final UserService userService;
   private final HashService hashService;
 
   @GetMapping
   public String getSignup(User user, Model model) {
-    return SIGNUP_TEMPLATE_NAME;
+    return Templates.SIGNUP;
   }
 
   @PostMapping
@@ -46,11 +45,11 @@ public class SignupController {
               .lastName(user.getFirstName())
               .salt(encodedSalt)
               .build());
-      model.addAttribute(SUCCESS_FIELD, true);
+      model.addAttribute(Attributes.SUCCESS, true);
     } catch (Exception e) {
-      model.addAttribute(ERROR_FIELD, true);
+      model.addAttribute(Attributes.ERROR, true);
     }
 
-    return SIGNUP_TEMPLATE_NAME;
+    return Templates.SIGNUP;
   }
 }

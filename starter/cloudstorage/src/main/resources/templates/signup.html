@@ -11,13 +11,13 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <div class="form-group">
-                <label><a>Back to Login</a></label>
+                <label><a th:href="@{/login}">Back to Login</a></label>
             </div>
 
             <h1 class="display-5">Sign Up</h1>
-            <form action="#" method="POST" th:object="${user}">
+            <form th:action="@{/signup}" method="POST" th:object="${user}">
                 <div th:if="${success}" class="alert alert-dark">
-                    You successfully signed up! Please continue to the <a>login</a> page.
+                    You successfully signed up! Please continue to the <a th:href="@{/login}">login</a> page.
                 </div>
                 <div th:if="${error}" class="alert alert-danger">
                     <span>username not available</span>
@@ -36,6 +36,7 @@
                     <div class="form-group col-md-6">
                         <label for="inputUsername">Username</label>
                         <input type="input" name="username" th:field="*{username}"  class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                    </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Password</label>
                         <input type="password" name="password" th:field="*{password}" class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required>

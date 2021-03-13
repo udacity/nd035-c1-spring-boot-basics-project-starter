@@ -12,23 +12,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserMapper userMapper;
-  private final HashService hashService;
 
   public Integer createUser(User user) throws Exception {
-
-    if (Objects.nonNull(userMapper.findUserByUsername(user.getUsername()))) {
+    val prospectUser = userMapper.findUserByUsername(user.getUsername());
+    if (Objects.nonNull(prospectUser)) {
       throw new Exception("User already taken!");
     }
 
     return userMapper.create(user);
-  }
-
-  public boolean validateCredentials(User user) {
-    val credentials = userMapper.findUserByUsername(user.getUsername());
-    if (Objects.isNull(credentials)) {
-      return false;
-    }
-    val hashedPassword = hashService.getHashedValue(user.getPassword(), credentials.getSalt());
-    return credentials.getPassword().equals(hashedPassword);
   }
 }
