@@ -40,7 +40,7 @@ public class AuthenticationService implements AuthenticationProvider {
   }
 
   private boolean validateCredentials(User user) {
-    val credentials = userMapper.findUserByUsername(user.getUsername());
+    val credentials = userMapper.findByUsername(user.getUsername());
     if (Objects.isNull(credentials)) {
       return false;
     }

@@ -11,8 +11,5 @@ public interface UserMapper {
   Integer create(User user);
 
   @Select("select * from USERS where username = #{username}")
-  User findUserByUsername(String username);
-
-  @Select("select * from USERS")
-  User[] getAllUsers();
+  User findByUsername(String username);
 }

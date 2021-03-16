@@ -14,7 +14,7 @@ public class UserService {
   private final UserMapper userMapper;
 
   public Integer createUser(User user) throws Exception {
-    val prospectUser = userMapper.findUserByUsername(user.getUsername());
+    val prospectUser = userMapper.findByUsername(user.getUsername());
     if (Objects.nonNull(prospectUser)) {
       throw new Exception("User already taken!");
     }
