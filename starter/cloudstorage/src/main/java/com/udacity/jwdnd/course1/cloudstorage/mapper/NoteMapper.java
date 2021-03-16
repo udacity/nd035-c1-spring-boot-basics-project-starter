@@ -14,9 +14,8 @@ public interface NoteMapper {
   @Select("select * from NOTES where userid = #{userId}")
   List<Note> findByUserId(Integer userId);
 
-  @Update({
-    "update NOTES set noteTitle = #{noteTitle}, noteDescription = #{noteDescription} where noteid = #{noteId}"
-  })
+  @Update(
+      "update NOTES set noteTitle = #{noteTitle}, noteDescription = #{noteDescription} where noteid = #{noteId}")
   Integer update(Note note);
 
   @Delete("delete from NOTES where noteid = #{noteId}")

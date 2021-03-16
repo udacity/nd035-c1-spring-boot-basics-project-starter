@@ -3,38 +3,61 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
-
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CredentialService {
 
-    private final EncryptionService encryptionService;
-    private final CredentialsMapper credentialsMapper;
-    private final UserMapper userMapper;
+  private final EncryptionService encryptionService;
+  private final CredentialsMapper credentialsMapper;
+  private final UserMapper userMapper;
 
-    public List<Credential> findCredentialsByUsername(String username) {
-        val user = userMapper.findByUsername(username);
-        return credentialsMapper.findByUserid(user.getUserId());
-    }
+  public List<Credential> findCredentialsByUsername(String username) {
+    val user = userMapper.findByUsername(username);
+    val credentials = credentialsMapper.findByUserid(user.getUserId());
+    return credentials.stream()
+        .map(
+            credential -> {
+              val decryptedValue =
+                  encryptionService.decryptValue(credential.getPassword(), credential.getKey());
+              credential.setDecryptedPassword(decryptedValue);
+              return credential;
+            })
+        .collect(Collectors.toList());
+  }
 
-    public Integer createCredentialsForUser(Credential credential, String username){
-        val user = userMapper.findByUsername(username);
+  public Integer createCredentialsForUser(Credential credential, String username) {
+    val user = userMapper.findByUsername(username);
 
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[16];
-        random.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
-        String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
-        String decryptedPassword = encryptionService.decryptValue(encryptedPassword, encodedKey);
+    String encodedKey = encryptionService.getRandomEncodingKey();
+    String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), encodedKey);
+    return credentialsMapper.create(
+        Credential.builder()
+            .key(encodedKey)
+            .url(credential.getUrl())
+            .userId(user.getUserId())
+            .username(credential.getUsername())
+            .password(encryptedPassword)
+            .build());
+  }
 
-        credential.setUserId(user.getUserId());
-        return credentialsMapper.create(credential);
-    }
+  public Integer updateCredential(Credential credential) {
+
+    val randomEncodingKey = encryptionService.getRandomEncodingKey();
+    credential.setKey(randomEncodingKey);
+    val encryptedPassword =
+        encryptionService.encryptValue(credential.getPassword(), randomEncodingKey);
+    credential.setPassword(encryptedPassword);
+
+    return credentialsMapper.update(credential);
+  }
+
+  public Integer deleteCredentials(String credentialId) {
+    return credentialsMapper.delete(credentialId);
+  }
 }

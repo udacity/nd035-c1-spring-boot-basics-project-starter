@@ -12,12 +12,20 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserMapper userMapper;
+  private final HashService hashService;
+  private final EncryptionService encryptionService;
 
   public Integer createUser(User user) throws Exception {
     val prospectUser = userMapper.findByUsername(user.getUsername());
     if (Objects.nonNull(prospectUser)) {
       throw new Exception("User already taken!");
     }
+
+    String encodedSalt = encryptionService.getRandomEncodingKey();
+    String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
+
+    user.setPassword(hashedPassword);
+    user.setSalt(encodedSalt);
 
     return userMapper.create(user);
   }

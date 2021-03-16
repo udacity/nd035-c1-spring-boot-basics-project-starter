@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,5 +52,12 @@ public class EncryptionService {
     }
 
     return new String(decryptedValue);
+  }
+
+  public String getRandomEncodingKey() {
+    SecureRandom random = new SecureRandom();
+    byte[] key = new byte[16];
+    random.nextBytes(key);
+    return Base64.getEncoder().encodeToString(key);
   }
 }

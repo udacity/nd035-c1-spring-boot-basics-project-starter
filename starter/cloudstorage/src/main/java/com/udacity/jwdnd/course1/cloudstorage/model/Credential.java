@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Credential {
-    Integer credentialId;
-    String url;
-    String username;
-    String key;
-    String password;
-    Integer userId;
+  Integer credentialId;
+  String url;
+  String username;
+  String key;
+  String password;
+  String decryptedPassword;
+  Integer userId;
 }

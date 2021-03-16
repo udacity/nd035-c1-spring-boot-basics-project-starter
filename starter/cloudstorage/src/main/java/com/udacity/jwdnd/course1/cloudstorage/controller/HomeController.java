@@ -25,20 +25,46 @@ public class HomeController {
   @GetMapping("/home")
   public String getHome(Principal principal, Note note, Credential credential, Model model) {
     val username = principal.getName();
-    
+
     model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
 
-    model.addAttribute(Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
     return Templates.HOME;
   }
 
   @PostMapping("/credentials")
-  public String postCredentialSet(Principal principal, Note note, Credential credential, Model model) {
+  public String postCredentialSet(
+      Principal principal, Note note, Credential credential, Model model) {
     val username = principal.getName();
 
-    credentialService.createCredentialsForUser(credential, username);
+    if (Objects.isNull(credential.getCredentialId())) {
+      credentialService.createCredentialsForUser(credential, username);
+    } else {
+      credentialService.updateCredential(credential);
+    }
 
-    model.addAttribute(Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+    model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+
+    return Templates.HOME;
+  }
+
+  @DeleteMapping("/credentials/{id}")
+  public String deleteCredentialSet(
+      Principal principal,
+      @PathVariable("id") String credentialId,
+      Note note,
+      Credential credential,
+      Model model) {
+    val username = principal.getName();
+    credentialService.deleteCredentials(credentialId);
+
+    model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+
     return Templates.HOME;
   }
 
@@ -53,16 +79,26 @@ public class HomeController {
     }
 
     model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+
     return Templates.HOME;
   }
 
   @DeleteMapping("/notes/{id}")
   public String deleteNote(
-      Principal principal, @PathVariable("id") String noteId, Note note, Credential credential, Model model) {
+      Principal principal,
+      @PathVariable("id") String noteId,
+      Note note,
+      Credential credential,
+      Model model) {
+    val username = principal.getName();
     val deletedNoteStatus = noteService.deleteNote(noteId);
 
-    val notes = noteService.findNotesByUsername(principal.getName());
-    model.addAttribute(Attributes.NOTES, notes);
+    model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+
     return Templates.HOME;
   }
 }
