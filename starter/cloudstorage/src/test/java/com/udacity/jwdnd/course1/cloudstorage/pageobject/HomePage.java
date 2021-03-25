@@ -1,7 +1,8 @@
-package com.udacity.jwdnd.course1.cloudstorage.testutils;
+package com.udacity.jwdnd.course1.cloudstorage.pageobject;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.testutils.JavascriptEvents;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.val;

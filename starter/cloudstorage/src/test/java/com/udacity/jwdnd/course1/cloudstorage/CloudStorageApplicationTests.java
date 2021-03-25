@@ -2,10 +2,10 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.udacity.jwdnd.course1.cloudstorage.testutils.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.pageobject.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.pageobject.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.pageobject.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.testutils.JavascriptEvents;
-import com.udacity.jwdnd.course1.cloudstorage.testutils.LoginPage;
-import com.udacity.jwdnd.course1.cloudstorage.testutils.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.function.Supplier;
 import lombok.val;
