@@ -33,7 +33,10 @@ public class HomeController {
   public String getHome(Principal principal, Note note, Credential credential, Model model) {
     val username = principal.getName();
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
+    model.addAttribute(
+        Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
+    model.addAttribute(Attributes.FILES, fileService.findFilesByUsername(username));
 
     return Templates.HOME;
   }
@@ -49,9 +52,9 @@ public class HomeController {
       credentialService.updateCredential(credential);
     }
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.SUCCESS, true);
 
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @DeleteMapping("/credentials/{id}")
@@ -64,9 +67,9 @@ public class HomeController {
     val username = principal.getName();
     credentialService.deleteCredentials(credentialId);
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.SUCCESS, true);
 
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @PostMapping("/notes")
@@ -79,9 +82,9 @@ public class HomeController {
       noteService.updateNote(note);
     }
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.SUCCESS, true);
 
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @DeleteMapping("/notes/{id}")
@@ -94,9 +97,9 @@ public class HomeController {
     val username = principal.getName();
     val deletedNoteStatus = noteService.deleteNote(noteId);
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.SUCCESS, true);
 
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @PostMapping("/files")
@@ -109,50 +112,54 @@ public class HomeController {
       throws IOException {
     val username = principal.getName();
 
-    val fileUploadStatus =
-        fileService.createFileForUser(
-            File.builder()
-                .fileName(fileUpload.getOriginalFilename())
-                .contentType(fileUpload.getContentType())
-                .fileSize(fileUpload.getSize())
-                .fileData(fileUpload.getBytes())
-                .build(),
-            username);
+    val isFileNameAvailable =
+        fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), username);
+    if (isFileNameAvailable) {
+      fileService.createFileForUser(
+          File.builder()
+              .fileName(fileUpload.getOriginalFilename())
+              .contentType(fileUpload.getContentType())
+              .fileSize(fileUpload.getSize())
+              .fileData(fileUpload.getBytes())
+              .build(),
+          username);
+      model.addAttribute(Attributes.SUCCESS, true);
+    } else {
+      model.addAttribute(Attributes.ERROR, true);
+    }
 
-    prefillModel(model, username);
-
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @DeleteMapping("/files/{id}")
   public String deleteFile(
-          Principal principal,
-          @PathVariable("id") String fileId,
-          Note note,
-          Credential credential,
-          Model model) {
+      Principal principal,
+      @PathVariable("id") String fileId,
+      Note note,
+      Credential credential,
+      Model model) {
     val username = principal.getName();
     val deletedFileStatus = fileService.deleteFile(fileId);
 
-    prefillModel(model, username);
+    model.addAttribute(Attributes.SUCCESS, true);
 
-    return Templates.HOME;
+    return Templates.RESULT;
   }
 
   @GetMapping("/files/{id}")
-  public ResponseEntity getFile(Principal principal, @PathVariable("id") String fileId, Note note, Credential credential, Model model) {
+  public ResponseEntity getFile(
+      Principal principal,
+      @PathVariable("id") String fileId,
+      Note note,
+      Credential credential,
+      Model model) {
     val username = principal.getName();
 
     val file = fileService.getFile(fileId);
 
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=\"" + file.getFileName() + "\"").body(file.getFileData());
-
-  }
-
-  private void prefillModel(Model model, String username){
-    model.addAttribute(Attributes.NOTES, noteService.findNotesByUsername(username));
-    model.addAttribute(
-            Attributes.CREDENTIALS, credentialService.findCredentialsByUsername(username));
-    model.addAttribute(Attributes.FILES, fileService.findFilesByUsername(username));
+    return ResponseEntity.ok()
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+        .body(file.getFileData());
   }
 }

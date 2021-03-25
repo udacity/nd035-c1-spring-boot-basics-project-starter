@@ -35,4 +35,10 @@ public class FileService {
   public File getFile(String fileId) {
     return fileMapper.findById(fileId);
   }
+
+  public boolean isFileNameAvailable(String originalFilename, String username) {
+    val user = userMapper.findByUsername(username);
+    val filesWithName = fileMapper.isFileNameAvailable(originalFilename, user.getUserId());
+    return filesWithName <= 0;
+  }
 }

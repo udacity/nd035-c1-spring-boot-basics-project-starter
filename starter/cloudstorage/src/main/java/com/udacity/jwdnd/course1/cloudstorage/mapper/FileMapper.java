@@ -2,7 +2,6 @@ package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +22,7 @@ public interface FileMapper {
 
   @Select("select * from FILES where fileid = #{fileId}")
   File findById(String fileId);
+
+  @Select("select count(*) from FILES where filename = #{fileName} and userid = #{userId}")
+  Integer isFileNameAvailable(String fileName, Integer userId);
 }

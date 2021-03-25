@@ -66,7 +66,7 @@
                         </button>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" id="userTable">
+                            <table class="table table-striped" id="notesTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
@@ -80,8 +80,8 @@
                                             <button type="submit" class="btn btn-success" th:onclick="javascript:showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]])">Edit</button>
                                             <form th:method="DELETE" th:action="@{'/notes/{id}'(id=${note.noteId})}"><button type="submit" class="btn btn-danger">Delete</button></form>
                                         </td>
-                                        <th th:text="${note.noteTitle}" scope="row">Example Note Title</th>
-                                        <td th:text="${note.noteDescription}">Example Note Description </td>
+                                        <th class="noteTitle" th:text="${note.noteTitle}" scope="row">Example Note Title</th>
+                                        <td class="noteDescription" th:text="${note.noteDescription}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -139,9 +139,9 @@
                                         <button type="button" class="btn btn-success" th:onclick="javascript:showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.decryptedPassword}]])">Edit</button>
                                         <form th:method="DELETE" th:action="@{'/credentials/{id}'(id=${credential.credentialId})}"><button type="submit" class="btn btn-danger">Delete</button></form>
                                     </td>
-                                    <th th:text="${credential.url}" scope="row">Example Credential URL</th>
-                                    <td th:text="${credential.username}" >Example Credential Username</td>
-                                    <td th:text="${credential.password}" >Example Credential Password</td>
+                                    <th class="credsUrl" th:text="${credential.url}" scope="row">Example Credential URL</th>
+                                    <td class="credsUsername" th:text="${credential.username}" >Example Credential Username</td>
+                                    <td class="credsPwd" th:text="${credential.password}" >Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
