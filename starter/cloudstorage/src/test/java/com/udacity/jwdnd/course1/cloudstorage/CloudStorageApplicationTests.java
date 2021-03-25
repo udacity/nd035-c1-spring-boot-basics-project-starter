@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.pageobject.ResultsPage;
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
@@ -13,7 +14,6 @@ import lombok.val;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -33,12 +33,14 @@ class CloudStorageApplicationTests {
   private LoginPage loginPage;
   private HomePage homePage;
   private ResultsPage resultsPage;
-  private WebDriverWait wait;
 
+  private final String loginFirstName = "vinny";
+  private final String loginLastName = "tortilla";
   private final String loginUsername = "capnvinnytortilla";
   private final String loginPwd = "youwishpervert";
   private final String noteTitle = "titley title";
   private final String noteDesc = "descriptive description";
+  private final String titleChange = ":revised";
   private final String ninjaEdit = " and then some!";
   private final String credsUsername = "vtor";
   private final String credsPwd = "inyourdreams";
@@ -56,7 +58,6 @@ class CloudStorageApplicationTests {
   @BeforeEach
   public void beforeEach() {
     this.driver = new ChromeDriver();
-    this.wait = new WebDriverWait(driver, 10);
     signupPage = new SignupPage(driver);
     loginPage = new LoginPage(driver);
     homePage = new HomePage(driver);
@@ -75,7 +76,7 @@ class CloudStorageApplicationTests {
   public void redirectUnauthedUsersToLogin() {
     driver.get(domainSupplier.get() + LoginPage.urlPath);
     assertTrue(driver.getCurrentUrl().endsWith(LoginPage.urlPath));
-    driver.get("http://localhost:" + this.port + HomePage.urlPath);
+    driver.get(domainSupplier.get() + HomePage.urlPath);
     assertTrue(driver.getCurrentUrl().endsWith(LoginPage.urlPath));
   }
 
@@ -83,8 +84,8 @@ class CloudStorageApplicationTests {
   @Order(1)
   public void successfulSignup() {
     driver.get(domainSupplier.get() + SignupPage.urlPath);
-    signupPage.fillFirstName("vinny");
-    signupPage.fillLastName("tortilla");
+    signupPage.fillFirstName(loginFirstName);
+    signupPage.fillLastName(loginLastName);
     signupPage.fillUsername(loginUsername);
     signupPage.fillPwd(loginPwd);
     signupPage.submitSignupForm();
@@ -97,8 +98,8 @@ class CloudStorageApplicationTests {
   @Order(2)
   public void unsuccessfulSignupUsernameTaken() {
     driver.get(domainSupplier.get() + SignupPage.urlPath);
-    signupPage.fillFirstName("vinny");
-    signupPage.fillLastName("tortilla");
+    signupPage.fillFirstName(loginFirstName);
+    signupPage.fillLastName(loginLastName);
     signupPage.fillUsername(loginUsername);
     signupPage.fillPwd(loginPwd);
     signupPage.submitSignupForm();
@@ -141,7 +142,7 @@ class CloudStorageApplicationTests {
 
     homePage.openNotes();
 
-    val notes =
+    val notesCount =
         homePage.getNotes().stream()
             .filter(
                 visibleNote ->
@@ -149,7 +150,7 @@ class CloudStorageApplicationTests {
                         && noteDesc.equals(visibleNote.getNoteDescription()))
             .count();
 
-    assertEquals(1, notes);
+    assertEquals(1, notesCount);
   }
 
   @Test
@@ -162,6 +163,7 @@ class CloudStorageApplicationTests {
     val notesLengthBeforeEdit = homePage.getNotes().size();
     homePage.openEditModalForNote(noteTitle);
     homePage.fillNoteDescription(ninjaEdit);
+    homePage.fillNoteTitle(titleChange);
     homePage.submitNoteModal();
 
     resultsPage.clickOnSuccessMessageLink();
@@ -170,12 +172,12 @@ class CloudStorageApplicationTests {
     val editedNote =
         homePage.getNotes().stream()
             .filter(
-                note -> {
-                  return note.getNoteDescription().equals(noteDesc + ninjaEdit);
-                })
+                note ->
+                    note.getNoteDescription().equals(noteDesc + ninjaEdit)
+                        && note.getNoteTitle().equals(noteTitle + titleChange))
             .findFirst();
-    assertEquals(editedNote.get().getNoteTitle(), noteTitle);
-    assertEquals(homePage.getNotes().size(), notesLengthBeforeEdit);
+    assertTrue(editedNote.isPresent());
+    assertEquals(notesLengthBeforeEdit, homePage.getNotes().size());
   }
 
   @Test
@@ -186,7 +188,7 @@ class CloudStorageApplicationTests {
 
     homePage.openNotes();
     val notesLengthBeforeEdit = homePage.getNotes().size();
-    homePage.deleteNote(noteTitle);
+    homePage.deleteNote(noteTitle + titleChange);
 
     resultsPage.clickOnSuccessMessageLink();
 
@@ -194,10 +196,10 @@ class CloudStorageApplicationTests {
 
     val deletedNote =
         homePage.getNotes().stream()
-            .filter(note -> note.getNoteTitle().equals(noteTitle))
+            .filter(note -> note.getNoteTitle().equals(noteTitle + titleChange))
             .findFirst();
     assertFalse(deletedNote.isPresent());
-    assertEquals(homePage.getNotes().size(), notesLengthBeforeEdit - 1);
+    assertEquals(notesLengthBeforeEdit - 1, homePage.getNotes().size());
   }
 
   @Test
@@ -217,14 +219,14 @@ class CloudStorageApplicationTests {
 
     homePage.openCreds();
 
-    val credsFromDb = credentialService.findCredentialsByUsername(loginUsername);
+    val allCredsForUser = credentialService.findCredentialsByUsername(loginUsername);
     val credFromDb =
-        credsFromDb.stream()
+        allCredsForUser.stream()
             .filter(c -> c.getUsername().equals(credsUsername) && c.getUrl().equals(credsUrl))
             .findFirst();
-    val encryptionKey = credFromDb.get().getKey();
+    val encryptionKey = credFromDb.get();
 
-    val encryptedPwd = encryptionService.encryptValue(credsPwd, encryptionKey);
+    val encryptedPwd = encryptionService.encryptValue(credsPwd, encryptionKey.getKey());
 
     val credsCount =
         homePage.getCreds().stream()
@@ -268,9 +270,9 @@ class CloudStorageApplicationTests {
     val newEncryptionKey =
         credentialService.findCredentialsByUsername(loginUsername).stream()
             .filter(cred -> cred.getUrl().equals(credsUrl))
-            .findFirst();
-    val newEncryptedPwd =
-        encryptionService.encryptValue(pwdChange, newEncryptionKey.get().getKey());
+            .findFirst()
+            .get();
+    val newEncryptedPwd = encryptionService.encryptValue(pwdChange, newEncryptionKey.getKey());
 
     assertEquals(credsUsernameChange, editedCreds.getUsername());
     assertEquals(newEncryptedPwd, editedCreds.getPassword());
@@ -293,8 +295,13 @@ class CloudStorageApplicationTests {
     homePage.openCreds();
 
     val deletedCreds =
-        homePage.getCreds().stream().filter(cred -> cred.getUrl().equals(credsUrl)).findFirst();
+        homePage.getCreds().stream()
+            .filter(
+                cred ->
+                    cred.getUrl().equals(credsUrl)
+                        && cred.getUsername().equals(credsUsername + credsUsernameChange))
+            .findFirst();
     assertFalse(deletedCreds.isPresent());
-    assertEquals(homePage.getCreds().size(), credsLengthBeforeEdit - 1);
+    assertEquals(credsLengthBeforeEdit - 1, homePage.getCreds().size());
   }
 }

@@ -64,7 +64,6 @@ public class HomeController {
       Note note,
       Credential credential,
       Model model) {
-    val username = principal.getName();
     credentialService.deleteCredentials(credentialId);
 
     model.addAttribute(Attributes.SUCCESS, true);
@@ -94,8 +93,7 @@ public class HomeController {
       Note note,
       Credential credential,
       Model model) {
-    val username = principal.getName();
-    val deletedNoteStatus = noteService.deleteNote(noteId);
+    noteService.deleteNote(noteId);
 
     model.addAttribute(Attributes.SUCCESS, true);
 
@@ -138,8 +136,8 @@ public class HomeController {
       Note note,
       Credential credential,
       Model model) {
-    val username = principal.getName();
-    val deletedFileStatus = fileService.deleteFile(fileId);
+
+    fileService.deleteFile(fileId);
 
     model.addAttribute(Attributes.SUCCESS, true);
 
@@ -153,8 +151,6 @@ public class HomeController {
       Note note,
       Credential credential,
       Model model) {
-    val username = principal.getName();
-
     val file = fileService.getFile(fileId);
 
     return ResponseEntity.ok()

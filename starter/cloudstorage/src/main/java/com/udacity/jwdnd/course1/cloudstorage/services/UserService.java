@@ -18,7 +18,7 @@ public class UserService {
   public Integer createUser(User user) throws Exception {
     val prospectUser = userMapper.findByUsername(user.getUsername());
     if (Objects.nonNull(prospectUser)) {
-      throw new Exception("User already taken!");
+      throw new Exception("Username already taken!");
     }
 
     String encodedSalt = encryptionService.getRandomEncodingKey();

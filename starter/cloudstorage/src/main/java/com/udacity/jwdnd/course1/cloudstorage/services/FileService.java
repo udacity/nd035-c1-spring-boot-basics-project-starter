@@ -28,8 +28,8 @@ public class FileService {
     return fileMapper.findByUserId(user.getUserId());
   }
 
-  public Integer deleteFile(String fileId) {
-    return fileMapper.delete(fileId);
+  public void deleteFile(String fileId) {
+    fileMapper.delete(fileId);
   }
 
   public File getFile(String fileId) {
