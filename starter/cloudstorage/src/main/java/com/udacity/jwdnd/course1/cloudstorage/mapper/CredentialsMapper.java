@@ -12,12 +12,12 @@ public interface CredentialsMapper {
 
   @Insert(
       "insert into CREDENTIALS (url, username, key, password, userid) values (#{url}, #{username}, #{key}, #{password}, #{userId})")
-  Integer create(Credential credential);
+  void create(Credential credential);
 
   @Delete("delete from CREDENTIALS where credentialid = #{credentialId}")
-  Integer delete(String credentialId);
+  void delete(String credentialId);
 
   @Update(
       "update CREDENTIALS set url = #{url}, username = #{username}, password = #{password}, key = #{key} where credentialid = #{credentialId}")
-  Integer update(Credential credential);
+  void update(Credential credential);
 }

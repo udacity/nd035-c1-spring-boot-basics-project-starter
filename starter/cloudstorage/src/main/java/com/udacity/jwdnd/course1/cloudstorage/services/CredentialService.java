@@ -31,12 +31,12 @@ public class CredentialService {
         .collect(Collectors.toList());
   }
 
-  public Integer createCredentialsForUser(Credential credential, String username) {
+  public void createCredentialsForUser(Credential credential, String username) {
     val user = userMapper.findByUsername(username);
 
     String encodedKey = encryptionService.getRandomEncodingKey();
     String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), encodedKey);
-    return credentialsMapper.create(
+    credentialsMapper.create(
         Credential.builder()
             .key(encodedKey)
             .url(credential.getUrl())
@@ -46,7 +46,7 @@ public class CredentialService {
             .build());
   }
 
-  public Integer updateCredential(Credential credential) {
+  public void updateCredential(Credential credential) {
 
     val randomEncodingKey = encryptionService.getRandomEncodingKey();
     credential.setKey(randomEncodingKey);
@@ -54,10 +54,10 @@ public class CredentialService {
         encryptionService.encryptValue(credential.getPassword(), randomEncodingKey);
     credential.setPassword(encryptedPassword);
 
-    return credentialsMapper.update(credential);
+    credentialsMapper.update(credential);
   }
 
-  public Integer deleteCredentials(String credentialId) {
-    return credentialsMapper.delete(credentialId);
+  public void deleteCredentials(String credentialId) {
+    credentialsMapper.delete(credentialId);
   }
 }

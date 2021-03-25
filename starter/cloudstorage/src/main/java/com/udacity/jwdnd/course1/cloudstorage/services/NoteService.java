@@ -15,10 +15,10 @@ public class NoteService {
   private final NoteMapper noteMapper;
   private final UserMapper userMapper;
 
-  public Integer createNoteForUser(Note note, String username) {
+  public void createNoteForUser(Note note, String username) {
     val user = userMapper.findByUsername(username);
     note.setUserId(user.getUserId());
-    return noteMapper.create(note);
+    noteMapper.create(note);
   }
 
   public List<Note> findNotesByUsername(String username) {
@@ -30,7 +30,7 @@ public class NoteService {
     noteMapper.delete(noteId);
   }
 
-  public Integer updateNote(Note note) {
-    return noteMapper.update(note);
+  public void updateNote(Note note) {
+    noteMapper.update(note);
   }
 }

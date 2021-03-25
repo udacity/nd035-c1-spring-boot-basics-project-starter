@@ -15,7 +15,7 @@ public class UserService {
   private final HashService hashService;
   private final EncryptionService encryptionService;
 
-  public Integer createUser(User user) throws Exception {
+  public void createUser(User user) throws Exception {
     val prospectUser = userMapper.findByUsername(user.getUsername());
     if (Objects.nonNull(prospectUser)) {
       throw new Exception("Username already taken!");
@@ -27,6 +27,6 @@ public class UserService {
     user.setPassword(hashedPassword);
     user.setSalt(encodedSalt);
 
-    return userMapper.create(user);
+    userMapper.create(user);
   }
 }

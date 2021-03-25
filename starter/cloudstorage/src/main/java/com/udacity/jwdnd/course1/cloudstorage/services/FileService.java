@@ -15,12 +15,12 @@ public class FileService {
   private final UserMapper userMapper;
   private final FileMapper fileMapper;
 
-  public Integer createFileForUser(File file, String username) {
+  public void createFileForUser(File file, String username) {
     val user = userMapper.findByUsername(username);
 
     file.setUserId(user.getUserId());
 
-    return fileMapper.create(file);
+    fileMapper.create(file);
   }
 
   public List<File> findFilesByUsername(String username) {
@@ -38,7 +38,7 @@ public class FileService {
 
   public boolean isFileNameAvailable(String originalFilename, String username) {
     val user = userMapper.findByUsername(username);
-    val filesWithName = fileMapper.isFileNameAvailable(originalFilename, user.getUserId());
+    val filesWithName = fileMapper.getFileCount(originalFilename, user.getUserId());
     return filesWithName <= 0;
   }
 }

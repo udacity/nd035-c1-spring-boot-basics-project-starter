@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HashService {
-  private Logger logger = LoggerFactory.getLogger(HashService.class);
+  private final Logger logger = LoggerFactory.getLogger(HashService.class);
 
   public String getHashedValue(String data, String salt) {
     byte[] hashedValue = null;
