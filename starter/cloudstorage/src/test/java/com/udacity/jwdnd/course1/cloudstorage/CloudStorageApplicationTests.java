@@ -124,6 +124,10 @@ class CloudStorageApplicationTests {
     loginPage.fillPwd(loginPwd);
     loginPage.submitLoginForm();
     assertTrue(driver.getCurrentUrl().endsWith(HomePage.urlPath));
+    homePage.logOut();
+    assertTrue(driver.getCurrentUrl().contains(LoginPage.urlPath));
+    driver.get(domainSupplier.get() + HomePage.urlPath);
+    assertTrue(driver.getCurrentUrl().endsWith(LoginPage.urlPath));
   }
 
   @Test

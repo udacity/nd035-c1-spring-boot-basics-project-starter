@@ -18,6 +18,9 @@ public class HomePage {
   private final WebDriverWait wait;
   private final WebDriver driver;
 
+  @FindBy(css = "#logoutDiv button")
+  private WebElement logOutButton;
+
   @FindBy(id = "nav-notes-tab")
   private WebElement notesTab;
 
@@ -200,5 +203,9 @@ public class HomePage {
                     noteElement.findElement(By.className("credsUrl")).getText().equals(credsurl))
             .findFirst();
     JavascriptEvents.click(note.get().findElement(By.className("btn-danger")), driver);
+  }
+
+  public void logOut() {
+    JavascriptEvents.click(logOutButton, driver);
   }
 }
