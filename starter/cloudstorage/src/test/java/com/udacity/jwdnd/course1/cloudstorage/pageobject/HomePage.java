@@ -95,6 +95,7 @@ public class HomePage {
 
   public void submitNoteModal() {
     JavascriptEvents.click(noteModalSubmitButton, driver);
+    JavascriptEvents.waitForReadyState(driver);
   }
 
   public List<Note> getNotes() {
@@ -153,6 +154,7 @@ public class HomePage {
 
   public void submitCredsModal() {
     JavascriptEvents.click(credsModalSubmitButton, driver);
+    JavascriptEvents.waitForReadyState(driver);
   }
 
   public List<Credential> getCreds() {
@@ -165,5 +167,28 @@ public class HomePage {
               return Credential.builder().username(username).password(pwd).url(url).build();
             })
         .collect(Collectors.toUnmodifiableList());
+  }
+
+  public void openEditModalForCreds(String credsurl) {
+    val targetCreds =
+        creds.stream()
+            .filter(
+                credsElement ->
+                    credsElement.findElement(By.className("credsUrl")).getText().equals(credsurl))
+            .findFirst();
+    JavascriptEvents.click(targetCreds.get().findElement(By.className("btn-success")), driver);
+    wait.until((webDriver) -> credsModal.isDisplayed());
+  }
+
+  public String getPwdField() {
+    return credsPwd.getAttribute("value");
+  }
+
+  public void clearCredsUsername() {
+    credsUsername.clear();
+  }
+
+  public void clearCredsPwd() {
+    credsPwd.clear();
   }
 }

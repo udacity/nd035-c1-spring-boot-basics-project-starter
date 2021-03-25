@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.pageobject;
 
+import com.udacity.jwdnd.course1.cloudstorage.testutils.JavascriptEvents;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -8,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 public class LoginPage {
 
   public static final String urlPath = "/login";
+  private final WebDriver driver;
 
   @FindBy(name = "username")
   private WebElement username;
@@ -22,6 +24,7 @@ public class LoginPage {
   private WebElement errorMessage;
 
   public LoginPage(WebDriver webDriver) {
+    this.driver = webDriver;
     PageFactory.initElements(webDriver, this);
   }
 
@@ -45,5 +48,6 @@ public class LoginPage {
     fillUsername(username);
     fillPwd(pwd);
     submitLoginForm();
+    JavascriptEvents.waitForReadyState(driver);
   }
 }

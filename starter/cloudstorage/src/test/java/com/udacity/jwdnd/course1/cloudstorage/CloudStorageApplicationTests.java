@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.pageobject.SignupPage;
-import com.udacity.jwdnd.course1.cloudstorage.testutils.JavascriptEvents;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.function.Supplier;
 import lombok.val;
@@ -13,12 +14,16 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CloudStorageApplicationTests {
+
+  @Autowired private CredentialService credentialService;
+  @Autowired private EncryptionService encryptionService;
 
   @LocalServerPort private int port;
 
@@ -38,6 +43,8 @@ class CloudStorageApplicationTests {
   private final String credsUsername = "vtor";
   private final String credsPwd = "inyourdreams";
   private final String credsurl = "https://lols.com";
+  private final String pwdChange = "fineits1234";
+  private final String credsUsernameChange = "vinnytor";
 
   private final Supplier<String> domainSupplier = () -> "http://localhost:" + this.port;
 
@@ -123,17 +130,14 @@ class CloudStorageApplicationTests {
   public void createNote() {
     driver.get(domainSupplier.get() + LoginPage.urlPath);
     loginPage.loginUser(loginUsername, loginPwd);
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
     homePage.openNoteModal();
     homePage.fillNoteTitle(noteTitle);
     homePage.fillNoteDescription(noteDesc);
     homePage.submitNoteModal();
-    JavascriptEvents.waitForReadyState(driver);
 
     resultsPage.clickOnSuccessMessageLink();
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
 
@@ -153,7 +157,6 @@ class CloudStorageApplicationTests {
   public void editNote() {
     driver.get(domainSupplier.get() + LoginPage.urlPath);
     loginPage.loginUser(loginUsername, loginPwd);
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
     val notesLengthBeforeEdit = homePage.getNotes().size();
@@ -162,7 +165,6 @@ class CloudStorageApplicationTests {
     homePage.submitNoteModal();
 
     resultsPage.clickOnSuccessMessageLink();
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
     val editedNote =
@@ -181,14 +183,12 @@ class CloudStorageApplicationTests {
   public void deleteNote() {
     driver.get(domainSupplier.get() + LoginPage.urlPath);
     loginPage.loginUser(loginUsername, loginPwd);
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
     val notesLengthBeforeEdit = homePage.getNotes().size();
     homePage.deleteNote(noteTitle);
 
     resultsPage.clickOnSuccessMessageLink();
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openNotes();
 
@@ -205,7 +205,6 @@ class CloudStorageApplicationTests {
   public void createCreds() {
     driver.get(domainSupplier.get() + LoginPage.urlPath);
     loginPage.loginUser(loginUsername, loginPwd);
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openCreds();
     homePage.openCredsModal();
@@ -213,21 +212,69 @@ class CloudStorageApplicationTests {
     homePage.fillCredsPwd(credsPwd);
     homePage.fillCredsUrl(credsurl);
     homePage.submitCredsModal();
-    JavascriptEvents.waitForReadyState(driver);
 
     resultsPage.clickOnSuccessMessageLink();
-    JavascriptEvents.waitForReadyState(driver);
 
     homePage.openCreds();
 
-    val creds =
+    val credsFromDb = credentialService.findCredentialsByUsername(loginUsername);
+    val credFromDb =
+        credsFromDb.stream()
+            .filter(c -> c.getUsername().equals(credsUsername) && c.getUrl().equals(credsurl))
+            .findFirst();
+    val encryptionKey = credFromDb.get().getKey();
+
+    val encryptedPwd = encryptionService.encryptValue(credsPwd, encryptionKey);
+
+    val credsCount =
         homePage.getCreds().stream()
             .filter(
                 visibleCred ->
                     credsurl.equals(visibleCred.getUrl())
-                        && credsUsername.equals(visibleCred.getUsername()))
+                        && credsUsername.equals(visibleCred.getUsername())
+                        && encryptedPwd.equals(visibleCred.getPassword()))
             .count();
 
-    assertEquals(1, creds);
+    assertEquals(1, credsCount);
+  }
+
+  @Test
+  @Order(4)
+  public void editCreds() {
+    driver.get(domainSupplier.get() + LoginPage.urlPath);
+    loginPage.loginUser(loginUsername, loginPwd);
+
+    homePage.openCreds();
+    val credsBeforeEdit = homePage.getCreds().size();
+    homePage.openEditModalForCreds(credsurl);
+
+    val unencryptedPwd = homePage.getPwdField();
+
+    homePage.clearCredsUsername();
+    homePage.fillCredsUsername(credsUsernameChange);
+    homePage.clearCredsPwd();
+    homePage.fillCredsPwd(pwdChange);
+    homePage.submitCredsModal();
+
+    resultsPage.clickOnSuccessMessageLink();
+
+    homePage.openCreds();
+    val editedCreds =
+        homePage.getCreds().stream()
+            .filter(cred -> cred.getUrl().equals(credsurl))
+            .findFirst()
+            .get();
+
+    val newEncryptionKey =
+        credentialService.findCredentialsByUsername(loginUsername).stream()
+            .filter(cred -> cred.getUrl().equals(credsurl))
+            .findFirst();
+    val newEncryptedPwd =
+        encryptionService.encryptValue(pwdChange, newEncryptionKey.get().getKey());
+
+    assertEquals(credsUsernameChange, editedCreds.getUsername());
+    assertEquals(newEncryptedPwd, editedCreds.getPassword());
+    assertEquals(credsPwd, unencryptedPwd);
+    assertEquals(credsBeforeEdit, homePage.getCreds().size());
   }
 }

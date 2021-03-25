@@ -24,5 +24,6 @@ public class ResultsPage {
   public void clickOnSuccessMessageLink() {
     wait.until(webDriver -> successMessageLink.isDisplayed());
     JavascriptEvents.click(successMessageLink, driver);
+    JavascriptEvents.waitForReadyState(driver);
   }
 }
