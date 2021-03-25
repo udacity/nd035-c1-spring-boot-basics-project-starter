@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CloudStorageApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CloudStorageApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(CloudStorageApplication.class, args);
+  }
 }
