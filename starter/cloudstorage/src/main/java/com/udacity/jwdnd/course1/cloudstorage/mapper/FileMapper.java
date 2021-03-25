@@ -12,17 +12,17 @@ public interface FileMapper {
 
   @Insert(
       "insert into FILES (filename, contenttype, filesize, userid, filedata) values (#{fileName}, #{contentType}, #{fileSize}, #{userId}, #{fileData})")
-  Integer create(File file);
+  void create(File file);
 
   @Select("select * from FILES where userid = #{userId}")
   List<File> findByUserId(Integer userId);
 
   @Delete("delete from FILES where fileid = #{fileId}")
-  Integer delete(String fileId);
+  void delete(String fileId);
 
   @Select("select * from FILES where fileid = #{fileId}")
   File findById(String fileId);
 
   @Select("select count(*) from FILES where filename = #{fileName} and userid = #{userId}")
-  Integer isFileNameAvailable(String fileName, Integer userId);
+  Integer getFileCount(String fileName, Integer userId);
 }
