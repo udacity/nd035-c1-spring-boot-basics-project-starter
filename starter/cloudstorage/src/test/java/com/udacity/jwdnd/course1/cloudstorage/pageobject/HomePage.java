@@ -191,4 +191,14 @@ public class HomePage {
   public void clearCredsPwd() {
     credsPwd.clear();
   }
+
+  public void deleteCreds(String credsurl) {
+    val note =
+        creds.stream()
+            .filter(
+                noteElement ->
+                    noteElement.findElement(By.className("credsUrl")).getText().equals(credsurl))
+            .findFirst();
+    JavascriptEvents.click(note.get().findElement(By.className("btn-danger")), driver);
+  }
 }

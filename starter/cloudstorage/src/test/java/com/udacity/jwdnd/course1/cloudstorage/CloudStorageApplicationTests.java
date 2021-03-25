@@ -42,7 +42,7 @@ class CloudStorageApplicationTests {
   private final String ninjaEdit = " and then some!";
   private final String credsUsername = "vtor";
   private final String credsPwd = "inyourdreams";
-  private final String credsurl = "https://lols.com";
+  private final String credsUrl = "https://lols.com";
   private final String pwdChange = "fineits1234";
   private final String credsUsernameChange = "vinnytor";
 
@@ -210,7 +210,7 @@ class CloudStorageApplicationTests {
     homePage.openCredsModal();
     homePage.fillCredsUsername(credsUsername);
     homePage.fillCredsPwd(credsPwd);
-    homePage.fillCredsUrl(credsurl);
+    homePage.fillCredsUrl(credsUrl);
     homePage.submitCredsModal();
 
     resultsPage.clickOnSuccessMessageLink();
@@ -220,7 +220,7 @@ class CloudStorageApplicationTests {
     val credsFromDb = credentialService.findCredentialsByUsername(loginUsername);
     val credFromDb =
         credsFromDb.stream()
-            .filter(c -> c.getUsername().equals(credsUsername) && c.getUrl().equals(credsurl))
+            .filter(c -> c.getUsername().equals(credsUsername) && c.getUrl().equals(credsUrl))
             .findFirst();
     val encryptionKey = credFromDb.get().getKey();
 
@@ -230,7 +230,7 @@ class CloudStorageApplicationTests {
         homePage.getCreds().stream()
             .filter(
                 visibleCred ->
-                    credsurl.equals(visibleCred.getUrl())
+                    credsUrl.equals(visibleCred.getUrl())
                         && credsUsername.equals(visibleCred.getUsername())
                         && encryptedPwd.equals(visibleCred.getPassword()))
             .count();
@@ -246,7 +246,7 @@ class CloudStorageApplicationTests {
 
     homePage.openCreds();
     val credsBeforeEdit = homePage.getCreds().size();
-    homePage.openEditModalForCreds(credsurl);
+    homePage.openEditModalForCreds(credsUrl);
 
     val unencryptedPwd = homePage.getPwdField();
 
@@ -261,13 +261,13 @@ class CloudStorageApplicationTests {
     homePage.openCreds();
     val editedCreds =
         homePage.getCreds().stream()
-            .filter(cred -> cred.getUrl().equals(credsurl))
+            .filter(cred -> cred.getUrl().equals(credsUrl))
             .findFirst()
             .get();
 
     val newEncryptionKey =
         credentialService.findCredentialsByUsername(loginUsername).stream()
-            .filter(cred -> cred.getUrl().equals(credsurl))
+            .filter(cred -> cred.getUrl().equals(credsUrl))
             .findFirst();
     val newEncryptedPwd =
         encryptionService.encryptValue(pwdChange, newEncryptionKey.get().getKey());
@@ -276,5 +276,25 @@ class CloudStorageApplicationTests {
     assertEquals(newEncryptedPwd, editedCreds.getPassword());
     assertEquals(credsPwd, unencryptedPwd);
     assertEquals(credsBeforeEdit, homePage.getCreds().size());
+  }
+
+  @Test
+  @Order(5)
+  public void deleteCreds() {
+    driver.get(domainSupplier.get() + LoginPage.urlPath);
+    loginPage.loginUser(loginUsername, loginPwd);
+
+    homePage.openCreds();
+    val credsLengthBeforeEdit = homePage.getCreds().size();
+    homePage.deleteCreds(credsUrl);
+
+    resultsPage.clickOnSuccessMessageLink();
+
+    homePage.openCreds();
+
+    val deletedCreds =
+        homePage.getCreds().stream().filter(cred -> cred.getUrl().equals(credsUrl)).findFirst();
+    assertFalse(deletedCreds.isPresent());
+    assertEquals(homePage.getCreds().size(), credsLengthBeforeEdit - 1);
   }
 }
