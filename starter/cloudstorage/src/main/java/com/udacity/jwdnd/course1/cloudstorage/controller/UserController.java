@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -18,20 +19,26 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String getUserRegistrationForm(User user, Model mode){
-        return "signup";
+    public String getUserRegistrationForm(Authentication authentication, User user, Model mode){
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken)
+            return "signup";
+        else return "/home";//TODO need to add redirection to home page - this redirects to page but does not change the url back to home (will calling home controller gethomepage method work??)
     }
 
     @PostMapping("/signup")
-    public String registerNewUser(Authentication authentication, User user, Model mode){
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+    public String registerNewUser(User user, Model model) {//TODO use a UserForm instead of the actual Entity class
+
+        if(userService.isUsernameAvailable(user.getUsername())) {
             user = userService.registerNewUser(user);
             System.out.println(user.toString());
-
-
-            return "signup";
         }
-        return "/home";//TODO need to add redirection to home page - is this correct? (will calling home controller gethomepage method work??)
+        else {
+            model.addAttribute("usernameUnavailableError", "Username unavailable");//TODO is this the best way to handle this on the front end?
+            user.setUsername("");
+        }
+        model.addAttribute("user", user);
+
+        return "signup";
     }
 
     @GetMapping("/login")
@@ -42,9 +49,5 @@ public class UserController {
 
         return "/home";//TODO need to add redirection
     }
-/*
-    @PostMapping("/logout")
-    public String logout(Model model){
-        return "login";
-    }*/
+
 }

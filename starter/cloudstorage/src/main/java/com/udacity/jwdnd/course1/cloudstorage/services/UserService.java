@@ -34,4 +34,8 @@ public class UserService {
 
         return userMapper.getUser(user.getUsername());
     }
+
+    public boolean isUsernameAvailable(String username) {
+        return userMapper.getUser(username)==null;
+    }
 }
