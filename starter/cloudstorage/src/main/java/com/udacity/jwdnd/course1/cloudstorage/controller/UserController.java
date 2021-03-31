@@ -2,6 +2,8 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +23,28 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String registerNewUser(User user, Model mode){
+    public String registerNewUser(Authentication authentication, User user, Model mode){
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            user = userService.registerNewUser(user);
+            System.out.println(user.toString());
 
-        user = userService.registerNewUser(user);
 
-        return "signup";
+            return "signup";
+        }
+        return "/home";//TODO need to add redirection to home page - is this correct? (will calling home controller gethomepage method work??)
     }
 
+    @GetMapping("/login")
+    public String getLoginForm(Authentication authentication){
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }
+
+        return "/home";//TODO need to add redirection
+    }
+/*
+    @PostMapping("/logout")
+    public String logout(Model model){
+        return "login";
+    }*/
 }
