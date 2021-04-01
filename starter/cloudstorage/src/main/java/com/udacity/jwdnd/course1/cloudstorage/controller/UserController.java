@@ -22,7 +22,7 @@ public class UserController {
     public String getUserRegistrationForm(Authentication authentication, User user, Model mode){
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken)
             return "signup";
-        else return "/home";//TODO need to add redirection to home page - this redirects to page but does not change the url back to home (will calling home controller gethomepage method work??)
+        else return "redirect:/home";//TODO need to add redirection to home page - this redirects to page but does not change the url back to home (will calling home controller gethomepage method work??)
     }
 
     @PostMapping("/signup")
@@ -46,8 +46,7 @@ public class UserController {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return "login";
         }
-
-        return "/home";//TODO need to add redirection
+        return "redirect:/home";
     }
 
 }

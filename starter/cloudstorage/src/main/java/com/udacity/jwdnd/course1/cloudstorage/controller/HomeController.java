@@ -20,8 +20,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String getHomePage(NoteForm noteForm, Authentication authentication, Model model){
-        model.addAttribute("notes",
-                notesService.getNotes(userService.getLoggedInUserId(authentication)));
+        model.addAttribute("notes", notesService.getNotes(userService.getLoggedInUserId(authentication)));
         return "home";
     }
 }
