@@ -5,6 +5,9 @@ import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class NotesService {
     private final NotesMapper notesMapper;
@@ -14,25 +17,34 @@ public class NotesService {
     }
 
     public void addNote(NoteForm noteForm, Integer userId) {
-        notesMapper.saveNote(Notes.builder()
+        Notes note = Notes.builder()
                 .userId(userId)
+                .noteId(noteForm.getNoteId())
                 .noteTitle(noteForm.getNoteTitle())
                 .noteDescription(noteForm.getNoteDescription())
-                .build());
+                .build();
+        if(noteForm.getNoteId()==null)
+            notesMapper.saveNote(note);
+        else notesMapper.updateNote(note);
     }
 
-    public Object getNotes(Integer userId) {
-        return notesMapper.getNotes(userId);
+    public List<NoteForm> getNotes(Integer userId) {
+        return notesMapper.getNotes(userId)
+                .stream()
+                .map(this::getNoteForm)
+                .collect(Collectors.toList());
     }
+
 
     public void deleteNote(Integer noteId) {
         notesMapper.deleteNote(noteId);
     }
-/*
-    public Object getNotes(String username) {
-        notesMapper.getNotes();
 
+    private NoteForm getNoteForm(Notes note) {
+        return NoteForm.builder()
+                .noteId(note.getNoteId())
+                .noteTitle(note.getNoteTitle())
+                .noteDescription(note.getNoteDescription())
+                .build();
     }
-
- */
 }
