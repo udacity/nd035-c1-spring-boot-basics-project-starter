@@ -1,4 +1,4 @@
-package com.udacity.jwdnd.course1.cloudstorage;
+package safwat.cloudstorage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,7 @@
-package com.udacity.jwdnd.course1.cloudstorage.services;
+package safwat.cloudstorage.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.*;
