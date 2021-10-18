@@ -32,7 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
 		//super.configure(http);
-
+		
+		/*For debugging purposes*/
+		 http.csrf().disable();
+	     http.headers().frameOptions().disable();
+///////////////////////////////////////////////////
 		
 	}
 }

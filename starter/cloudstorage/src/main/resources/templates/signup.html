@@ -15,11 +15,11 @@
             </div>
 
             <h1 class="display-5">Sign Up</h1>
-            <form action="#" method="POST">
-                <div class="alert alert-dark">
-                    You successfully signed up! Please continue to the <a>login</a> page.
+            <form action="#" th:action="@{/signup}" method="POST">
+                <div th:if="${success}" class="alert alert-dark">
+                    You successfully signed up! Please continue to the <a href = "/login">login</a> page.
                 </div>
-                <div class="alert alert-danger">
+                <div th:if="${error}" th:text="${error}" class="alert alert-danger">
                     <span>Example Signup Error Message</span>
                 </div>
                 <div class="form-row">
@@ -35,7 +35,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputUsername">Username</label>
-                        <input type="input" name="username" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                        <input type="input" name="userName" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Password</label>
