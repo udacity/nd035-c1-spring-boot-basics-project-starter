@@ -34,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/signup", "/css/**", "/js/**", "/h2-console/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.logout().permitAll();
+			.logout().logoutSuccessUrl("/login?logout").permitAll()// what if the user enters "?logout" not fixed yet
+			.invalidateHttpSession(true).deleteCookies("JSESSIONID");
 			
 		
 		http.formLogin()
@@ -42,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.formLogin()
 			.defaultSuccessUrl("/home", true);
+		
 			
 		/*For debugging purposes*/
 		 http.csrf().disable();
