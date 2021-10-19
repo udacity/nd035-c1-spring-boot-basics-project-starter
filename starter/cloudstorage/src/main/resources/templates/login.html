@@ -12,10 +12,10 @@
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
             <form action="#" method="POST">
-                <div class="alert alert-danger">
+                <div th:if = "${param.error}" class="alert alert-danger">
                     Invalid username or password
                 </div>
-                <div class="alert alert-dark">
+                <div th:if = "${param.logout}" class="alert alert-dark">
                     You have been logged out
                 </div>
                 <div class="form-group">
