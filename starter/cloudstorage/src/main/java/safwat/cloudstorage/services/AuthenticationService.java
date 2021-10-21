@@ -17,10 +17,12 @@ public class AuthenticationService implements AuthenticationProvider {
 	
 	
 	UserMapper userMapper;
+	HashService hashService;
 	
-	public AuthenticationService(UserMapper userMapper) {
+	public AuthenticationService(UserMapper userMapper, HashService hashService) {
 		// TODO Auto-generated constructor stub
 		this.userMapper = userMapper;
+		this.hashService = hashService;
 	}
 
 	@Override
@@ -32,8 +34,9 @@ public class AuthenticationService implements AuthenticationProvider {
 		User user = userMapper.findUserByUserName(userName);
 		
 		if(user != null) {
-			if(password.equals(user.getPassword())) {
-				return new UsernamePasswordAuthenticationToken(user, password, new ArrayList<>());
+			String hashedPassword = hashService.getHashedValue(password, user.getSalt());
+			if(hashedPassword.equals(user.getPassword())) {
+				return new UsernamePasswordAuthenticationToken(userName, password, new ArrayList<>());
 			}
 		}
 		

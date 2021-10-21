@@ -9,6 +9,15 @@ public class User {
 	private String password;
 	
 	
+	public User(String salt, String firstName, String lastName, String userName, String password) {
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userName = userName;
+		this.password = password;
+		// TODO Auto-generated constructor stub
+	}
+	
 	public int getUserId() {
 		return userId;
 	}
