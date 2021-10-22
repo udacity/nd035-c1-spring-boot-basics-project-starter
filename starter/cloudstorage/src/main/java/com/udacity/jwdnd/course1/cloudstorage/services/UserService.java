@@ -34,6 +34,7 @@ public class UserService {
     public Integer getUserId(String username) {
         User user = userMapper.getUser(username);
         if (user != null) {
+            System.out.println("Current user is: " + user.getUsername() + " id:" + user.getUserid());
             return user.getUserid();
         } else {
             return null;

@@ -7,11 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/home")
 public class HomeController {
 
     private final NoteService noteService;
@@ -23,17 +23,10 @@ public class HomeController {
     }
 
     @GetMapping
-    public String homeView(Authentication authentication, Model model) {
-        int userId = userService.getUserId(authentication.getName());
+    public String homeView(Authentication authentication, @ModelAttribute(value = "noteForm") NoteForm noteForm, Model model) {
+        Integer userId = userService.getUserId(authentication.getName());
         model.addAttribute("notesList", this.noteService.getNotesList(userId));
         return "home";
-    }
-
-    @PostMapping("note")
-    public String addNoteForUser(Authentication authentication, NoteForm noteForm, Model model) {
-        int userId = userService.getUserId(authentication.getName());
-        this.noteService.addNote(userId, noteForm);
-        return "result";
     }
 
 }
