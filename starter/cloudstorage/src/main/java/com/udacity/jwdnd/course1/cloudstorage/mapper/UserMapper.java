@@ -15,5 +15,4 @@ public interface UserMapper {
 
     @Delete("DELETE FROM USERS WHERE userid = #{userid}")
     void delete(Integer userid);
-
 }
