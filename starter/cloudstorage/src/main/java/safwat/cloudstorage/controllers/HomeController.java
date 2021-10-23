@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authenticati
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -52,8 +53,17 @@ public class HomeController {
 		}
 		model.addAttribute("notesList", noteService.getAllNotes());
 		
+	}
+	
+	@GetMapping("/deleteNote/{noteid}")
+
+	public String deleteNote(@PathVariable(value = "noteid") int noteId, Authentication authentication, Note note, Model model){
 		
+		System.out.println("delete ---> " + note.getNoteTitle());
 		
-		
+		noteService.deleteNote(noteId); 
+
+		return "redirect:/home";
+
 	}
 }
