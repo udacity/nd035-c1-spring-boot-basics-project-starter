@@ -1,7 +1,11 @@
 package safwat.cloudstorage.controllers;
 
-import java.security.NoSuchAlgorithmException;
+import java.io.IOException;
 
+
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,13 +13,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.net.HttpHeaders;
 
 import safwat.cloudstorage.model.Credentials;
+import safwat.cloudstorage.model.File;
 import safwat.cloudstorage.model.Note;
 import safwat.cloudstorage.model.User;
 import safwat.cloudstorage.services.CredentialsService;
 import safwat.cloudstorage.services.NoteService;
 import safwat.cloudstorage.services.UserService;
+import safwat.cloudstorage.services.FileService;
 
 @Controller
 @RequestMapping("/home")
@@ -24,13 +34,15 @@ public class HomeController {
 	NoteService noteService;
 	CredentialsService credentialsService;
 	UserService userService;
+	FileService fileService;
 	
 	public HomeController(NoteService noteService, CredentialsService credentialsService
-			, UserService userService) {
+			, UserService userService, FileService fileService) {
 		// TODO Auto-generated constructor stub
 		this.noteService = noteService;
 		this.credentialsService = credentialsService;
 		this.userService = userService;
+		this.fileService = fileService;
 	}
 	
 	
@@ -38,6 +50,7 @@ public class HomeController {
 	public String getHomePage(Note note, Model model) {
 		model.addAttribute("notesList", noteService.getAllNotes());
 		model.addAttribute("credentialsList", credentialsService.getAllCredentials());
+		model.addAttribute("filesList", fileService.getAllFiles());
 		
 		return "home";
 	}
@@ -111,5 +124,47 @@ public class HomeController {
 		credentialsService.deleteCredential(credentialId);
 		
 		return "redirect:/home";
+	}
+	
+	@GetMapping("/deleteFile/{fileId}")
+	public String deleteFile(@PathVariable(value = "fileId") int fileId, Model model) {
+		
+		fileService.deleteFile(fileId);
+		
+		return "redirect:/home";
+	}
+	
+	
+	@PostMapping("/files")
+	public String uploadFiles(@RequestParam("fileUpload") MultipartFile fileUpload, Model model ) throws IOException {
+		File file = new File(null, null, null, null, null, null);
+		file.setContentType(fileUpload.getContentType());
+		file.setFileData(fileUpload.getBytes());
+		file.setFileName(fileUpload.getOriginalFilename());
+		file.setFileSize(fileUpload.getSize());
+		
+		fileService.saveFile(file);
+		
+		System.out.println(fileUpload.getContentType());
+	    System.out.println(fileUpload.getBytes());
+	    System.out.println(fileUpload.getOriginalFilename());
+	    System.out.println(fileUpload.getSize());
+	    
+	    model.addAttribute("filesList", fileService.getAllFiles());
+		
+		return "redirect:/home";
+	}
+	
+	
+	@GetMapping("/viewFile/{fileId}")
+	public ResponseEntity<ByteArrayResource> viewFile(@PathVariable(value = "fileId") int fileId, Model model) {
+		
+		File file = fileService.getFileById(fileId);
+		
+		return ResponseEntity.ok() 
+				 .contentType(MediaType.parseMediaType(file.getContentType())).header(HttpHeaders.CONTENT_DISPOSITION,
+			"attachment; filename=\"" + file.getFileName() + "\"").body(new 
+				  ByteArrayResource(file.getFileData()));
+		//return "redirect:/home";
 	}
 }
