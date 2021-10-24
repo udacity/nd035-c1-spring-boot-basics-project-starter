@@ -27,6 +27,24 @@ public class NoteService {
         return noteMapper.insert(newNote);
     }
 
+    public void editNote(Integer userId, NoteForm noteForm) {
+        System.out.println("Editing note with id:" + noteForm.getNoteId());
+        Note note = new Note();
+        note.setNoteId(noteForm.getNoteId());
+        note.setNoteTitle(noteForm.getNoteTitle());
+        note.setNoteDescription(noteForm.getNoteDescription());
+        note.setUserId(userId);
+        noteMapper.updateNote(note);
+    }
+
+    public void deleteNote(Integer noteId) {
+        noteMapper.delete(noteId);
+    }
+
+    public Note getNoteById(Integer noteId) {
+        return noteMapper.getNote(noteId);
+    }
+
     public List<Note> getNotesList(Integer userid) {
         System.out.println("Fetching notes list from database with size: " + noteMapper.getAllNotesForUser(userid).size());
         return noteMapper.getAllNotesForUser(userid);

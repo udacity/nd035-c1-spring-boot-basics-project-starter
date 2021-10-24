@@ -80,8 +80,10 @@
                                 </tr>
                                     <tr th:each="userNote : ${notesList}">
                                         <td>
-                                            <button id="edit-note-button" type="button" class="btn btn-success">Edit</button>
-                                            <a id="delete-note-button" class="btn btn-danger">Delete</a>
+                                            <button id="edit-note-button" type="button" class="btn btn-success"
+                                                    th:attr="noteId=${userNote.noteId}, noteTitle=${userNote.noteTitle}, noteDesc=${userNote.noteDescription}"
+                                                    th:onclick="showNoteModal(this.getAttribute('noteId'), this.getAttribute('noteTitle'), this.getAttribute('noteDesc'))">Edit</button>
+                                            <a id="delete-note-button" class="btn btn-danger" th:href="@{/result/note/delete(noteId=${userNote.noteId})}">Delete</a>
                                         </td>
                                         <th th:text="${userNote.noteTitle}" scope="row">Example Note Title</th>
                                         <td th:text="${userNote.noteDescription}">Example Note Description </td>
