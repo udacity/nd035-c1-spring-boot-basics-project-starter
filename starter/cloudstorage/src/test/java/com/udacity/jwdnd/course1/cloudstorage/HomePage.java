@@ -76,4 +76,5 @@ public class HomePage {
         deleteNoteButton.click();
     }
 
+
 }
