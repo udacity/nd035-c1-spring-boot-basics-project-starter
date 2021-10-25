@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import safwat.cloudstorage.mappers.NoteMapper;
 import safwat.cloudstorage.model.Note;
+import safwat.cloudstorage.model.User;
 
 
 @Service
@@ -38,7 +39,7 @@ public class NoteService {
 		noteMapper.deleteNote(noteId);
 	}
 	
-	public List<Note> getAllNotes(){
-		return noteMapper.findAllNotes();
+	public List<Note> getAllNotes(User user){
+		return noteMapper.findAllNotes(user);
 	}
 }

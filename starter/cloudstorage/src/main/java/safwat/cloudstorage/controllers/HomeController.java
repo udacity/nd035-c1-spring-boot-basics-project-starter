@@ -47,30 +47,31 @@ public class HomeController {
 	
 	
 	@GetMapping
-	public String getHomePage(Note note, Model model) {
-		model.addAttribute("notesList", noteService.getAllNotes());
-		model.addAttribute("credentialsList", credentialsService.getAllCredentials());
-		model.addAttribute("filesList", fileService.getAllFiles());
+	public String getHomePage(Note note, Authentication auth, Model model) {
 		
+		
+		User user = userService.getUserByUserName(auth.getName());
+		model.addAttribute("notesList", noteService.getAllNotes(user));
+		model.addAttribute("credentialsList", credentialsService.getAllCredentials(user));
+		model.addAttribute("filesList", fileService.getAllFiles(user));
+		
+		model.addAttribute("credService", this.credentialsService);
+
 		return "home";
 	}
 	
 	
 	@PostMapping
-	public void postNotePage(Note note, Credentials credentials, Authentication auth, Model model) {
+	public String postNotePage(Note note, Credentials credentials, Authentication auth, Model model) {
 		
-		/*System.out.println(note.getNoteTitle());
-		System.out.println(note.getNoteDescription());
-		System.out.println(note.getNoteId());*/
 		
+		User user = userService.getUserByUserName(auth.getName());
 		
 		if(note.getNoteDescription() != null || note.getNoteTitle() != null) {
 			
 			if(note.getNoteId() == null) {
-				User user = userService.getUserByUserName(auth.getName());
 				
-				System.out.println("username : " + auth.getName()); 
-				System.out.println("user : " + user);
+				
 				
 				note.setUserId(user.getUserId());
 				noteService.createNote(note);
@@ -80,30 +81,34 @@ public class HomeController {
 				noteService.updateNote(note);
 			}
 			
-			
+			model.addAttribute("saved", true);
 		}
 		
 		if(credentials.getUrl() != null || credentials.getUserName() != null
 				|| credentials.getPassword() != null) {
 			
-			System.out.println("id " + credentials.getCredentialId());
 			
 			if(credentials.getCredentialId() == null) {
-				User user = userService.getUserByUserName(auth.getName());
+				//User user = userService.getUserByUserName(auth.getName());
+
 				credentials.setUserId(user.getUserId());
+				
 				credentialsService.createCredentials(credentials);
 			}
 			else {
+				
 				credentialsService.updateCredentials(credentials);
 			}
 			
-			
+			model.addAttribute("saved", true);
 		}
-		if(credentials.getCredentialId() != null) {
-			model.addAttribute("defPassword", credentialsService.getOriginalPass(credentials));
-		}
-		model.addAttribute("notesList", noteService.getAllNotes());
-		model.addAttribute("credentialsList", credentialsService.getAllCredentials());
+//		if(credentials.getCredentialId() != null)
+		model.addAttribute("credService", this.credentialsService);
+
+		model.addAttribute("notesList", noteService.getAllNotes(user));
+		model.addAttribute("credentialsList", credentialsService.getAllCredentials(user));
+		
+		return "result";
 		
 	}
 	
@@ -111,11 +116,12 @@ public class HomeController {
 
 	public String deleteNote(@PathVariable(value = "noteid") int noteId, Authentication authentication, Note note, Model model){
 		
-		System.out.println("delete ---> " + note.getNoteTitle());
 		
 		noteService.deleteNote(noteId); 
 
-		return "redirect:/home";
+		model.addAttribute("saved", true);
+		
+		return "result";
 
 	}
 	
@@ -131,28 +137,41 @@ public class HomeController {
 		
 		fileService.deleteFile(fileId);
 		
-		return "redirect:/home";
+		model.addAttribute("saved", true);
+		return "result";
 	}
 	
 	
 	@PostMapping("/files")
-	public String uploadFiles(@RequestParam("fileUpload") MultipartFile fileUpload, Model model ) throws IOException {
+	public String uploadFiles(@RequestParam("fileUpload") MultipartFile fileUpload,Authentication auth, Model model ) throws IOException {
+		
+		User user = userService.getUserByUserName(auth.getName());
+
 		File file = new File(null, null, null, null, null, null);
 		file.setContentType(fileUpload.getContentType());
 		file.setFileData(fileUpload.getBytes());
 		file.setFileName(fileUpload.getOriginalFilename());
 		file.setFileSize(fileUpload.getSize());
+		file.setUserId(user.getUserId());
 		
-		fileService.saveFile(file);
+		if(fileService.isFileNameAvailable(file.getFileName(), file.getUserId())) {
+			model.addAttribute("saved", true);
+			fileService.saveFile(file);
+		}
 		
-		System.out.println(fileUpload.getContentType());
+		else {
+			model.addAttribute("error", true);
+		}
+		
+		/*System.out.println(fileUpload.getContentType());
 	    System.out.println(fileUpload.getBytes());
 	    System.out.println(fileUpload.getOriginalFilename());
-	    System.out.println(fileUpload.getSize());
+	    System.out.println(fileUpload.getSize());*/
 	    
-	    model.addAttribute("filesList", fileService.getAllFiles());
+	    model.addAttribute("filesList", fileService.getAllFiles(user));
+	    
 		
-		return "redirect:/home";
+		return "result";
 	}
 	
 	
@@ -165,6 +184,6 @@ public class HomeController {
 				 .contentType(MediaType.parseMediaType(file.getContentType())).header(HttpHeaders.CONTENT_DISPOSITION,
 			"attachment; filename=\"" + file.getFileName() + "\"").body(new 
 				  ByteArrayResource(file.getFileData()));
-		//return "redirect:/home";
+
 	}
 }

@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import safwat.cloudstorage.model.Credentials;
+import safwat.cloudstorage.model.User;
 
 @Mapper
 public interface CredentialsMapper {
@@ -17,12 +18,12 @@ public interface CredentialsMapper {
 	@Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialId}")
 	Credentials findCredentialsById(int credentialId);
 	
-	@Select("SELECT * FROM CREDENTIALS")
-	List<Credentials> findAllCredentials();
+	@Select("SELECT * FROM CREDENTIALS WHERE userid = #{userId}")
+	List<Credentials> findAllCredentials(User user);
 	
 	
-	@Insert("INSERT INTO CREDENTIALS (url, username, key, password) "
-			+ "VALUES(#{url}, #{userName},#{key}, #{password})")
+	@Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) "
+			+ "VALUES(#{url}, #{userName},#{key}, #{password}, #{userId})")
 	@Options(useGeneratedKeys = true, keyProperty = "credentialId")
 	int insertCredentials(Credentials credentials);
 	

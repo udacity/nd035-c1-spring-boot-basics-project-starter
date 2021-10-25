@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import safwat.cloudstorage.model.Note;
+import safwat.cloudstorage.model.User;
 
 @Mapper
 public interface NoteMapper {
@@ -22,8 +23,8 @@ public interface NoteMapper {
 	Note findNoteById(int noteId);
 
 	
-	@Select("SELECT * FROM NOTES")
-	List<Note> findAllNotes();
+	@Select("SELECT * FROM NOTES WHERE userid = #{userId}")
+	List<Note> findAllNotes(User user);
 	
 	@Insert("INSERT INTO NOTES (notetitle, notedescription, userid) "
 			+ "VALUES(#{noteTitle}, #{noteDescription}, #{userId})")

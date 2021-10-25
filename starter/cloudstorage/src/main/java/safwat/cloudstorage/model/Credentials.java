@@ -1,5 +1,6 @@
 package safwat.cloudstorage.model;
 
+
 public class Credentials {
 	private Integer credentialId;
 	private String url;
@@ -16,6 +17,8 @@ public class Credentials {
 		this.key = key;
 		this.password = password;
 		this.userId = userId;
+		
+			
 	}
 
 
@@ -75,5 +78,6 @@ public class Credentials {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	
 	
 }

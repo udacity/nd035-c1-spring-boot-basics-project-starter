@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import safwat.cloudstorage.mappers.CredentialsMapper;
 import safwat.cloudstorage.model.Credentials;
+import safwat.cloudstorage.model.User;
 
 @Service
 public class CredentialsService {
@@ -51,8 +52,8 @@ public class CredentialsService {
 		return credentialsMapper.updateCredentials(credentials);
 	}
 	
-	public List<Credentials> getAllCredentials(){
-		return credentialsMapper.findAllCredentials();
+	public List<Credentials> getAllCredentials(User user){
+		return credentialsMapper.findAllCredentials(user);
 	}
 	
 	public String getOriginalPass(Credentials credentials) {
