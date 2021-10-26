@@ -28,18 +28,20 @@ public class SignupController {
 	
 	
 	@PostMapping
-	public void postSignupPage(User user, Model model) {
+	public String postSignupPage(User user, Model model) {
 		//matching occurs by name attribute to populate user
-		System.out.println(user.getUserName());
+		//System.out.println(user.getUserName());
 		String error = null;
 		if(userService.isUserAvailable(user)) {
 			userService.createUser(user);
 			model.addAttribute("success", true);
+			return "redirect:/login";
 		}
 		else {
 			error = "userName alredy exists";
 			model.addAttribute("error", error);
 		}
+		return "signup";
 	}
 	
 	

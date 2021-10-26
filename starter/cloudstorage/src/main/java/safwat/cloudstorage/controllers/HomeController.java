@@ -2,7 +2,6 @@ package safwat.cloudstorage.controllers;
 
 import java.io.IOException;
 
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -129,7 +128,9 @@ public class HomeController {
 	public String deleteCredential(@PathVariable(value = "credentialId") int credentialId, Model model) {
 		credentialsService.deleteCredential(credentialId);
 		
-		return "redirect:/home";
+		model.addAttribute("saved", true);
+		
+		return "result";
 	}
 	
 	@GetMapping("/deleteFile/{fileId}")
@@ -143,7 +144,17 @@ public class HomeController {
 	
 	
 	@PostMapping("/files")
-	public String uploadFiles(@RequestParam("fileUpload") MultipartFile fileUpload,Authentication auth, Model model ) throws IOException {
+	public String uploadFiles(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication auth, Model model ) throws IOException {
+		
+		if(fileUpload.isEmpty()) {
+			model.addAttribute("noFile", true);
+			return "result";
+		}
+		
+		if(fileUpload.getSize() > 10485760) {
+			model.addAttribute("largeFile", true);
+			return "result";
+		}
 		
 		User user = userService.getUserByUserName(auth.getName());
 
@@ -162,6 +173,8 @@ public class HomeController {
 		else {
 			model.addAttribute("error", true);
 		}
+		
+		//ErrorMvcAutoConfiguration
 		
 		/*System.out.println(fileUpload.getContentType());
 	    System.out.println(fileUpload.getBytes());
@@ -184,6 +197,8 @@ public class HomeController {
 				 .contentType(MediaType.parseMediaType(file.getContentType())).header(HttpHeaders.CONTENT_DISPOSITION,
 			"attachment; filename=\"" + file.getFileName() + "\"").body(new 
 				  ByteArrayResource(file.getFileData()));
+		
+		
 
 	}
 }

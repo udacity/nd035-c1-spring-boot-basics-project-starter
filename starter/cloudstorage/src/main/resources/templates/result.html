@@ -14,14 +14,19 @@
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a href = "/home">here</a> to continue.</span>
             </div>
-            <div th:if = "${notSaved}" class="alert alert-danger fill-parent">
+            <div th:if = "${noFile}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
-                <span>Your changes were not saved. Click <a href = "/home">here</a> to continue.</span>
+                <span>You didn't choose any file to upload. Click <a href = "/home">here</a> to continue.</span>
             </div>
             <div th:if = "${error}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Same Filename</h1>
                 <span>The file name already exists, please change the name</span>
                 <span>Click <a href = "/home">here</a> to continue.</span>
+            </div>
+            <div th:if = "${largeFile}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">very Large File</h1>
+                <span>please choose a smaller file to upload.</span>
+                <span>Click <a id = "homeLink" href = "/home">here</a> to continue.</span>
             </div>
         </div>
     </body>
