@@ -1,7 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -22,11 +24,13 @@ public class ResultController {
     private final UserService userService;
     private final NoteService noteService;
     private final FileService fileService;
+    private final CredentialService credentialService;
 
-    public ResultController(UserService userService, NoteService noteService, FileService fileService) {
+    public ResultController(UserService userService, NoteService noteService, FileService fileService, CredentialService credentialService) {
         this.userService = userService;
         this.noteService = noteService;
         this.fileService = fileService;
+        this.credentialService = credentialService;
     }
 
     @GetMapping
@@ -95,7 +99,7 @@ public class ResultController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+filename+"\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                 .body(file.getFileData());
     }
 
@@ -105,6 +109,39 @@ public class ResultController {
         try {
             fileService.deleteFile(fileId);
             if (fileService.getFileById(fileId) == null) {
+                model.addAttribute("successMessage", true);
+            }
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
+        }
+
+        return "result";
+    }
+
+    @PostMapping("/credential")
+    public String addCredentialForUser(Authentication authentication, CredentialForm credentialForm, Model model) {
+        Integer userId = userService.getUserId(authentication.getName());
+
+        try {
+            if (credentialForm.getCredentialId() == null) {
+                credentialService.addCredential(userId, credentialForm);
+            } else {
+                credentialService.editCredential(credentialForm);
+            }
+            model.addAttribute("successMessage", true);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
+        }
+
+        return "result";
+    }
+
+    @GetMapping("/credential/delete")
+    public String deleteCredential(@RequestParam("credentialId") Integer credentialId, Model model) {
+
+        try {
+            credentialService.deleteCredential(credentialId);
+            if (credentialService.getCredentialById(credentialId) == null) {
                 model.addAttribute("successMessage", true);
             }
         } catch (Exception e) {
