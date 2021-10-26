@@ -56,6 +56,10 @@ public class CredentialsPage {
 		
 		this.saveCredentialButton.click();
 		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
+		
+		
 	}
 	
 	public void editCredential(String url, String userName, String pass, WebDriver driver)throws InterruptedException {
@@ -75,6 +79,10 @@ public class CredentialsPage {
 		this.inputCredentialPassword.sendKeys(pass);
 		
 		this.saveCredentialButton.click();
+		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
+		
 	}
 	
 	public boolean checkCredential() {
@@ -89,6 +97,11 @@ public class CredentialsPage {
 		jse.executeScript("arguments[0].click()", nav_credentials_tab);
 		
 		jse.executeScript("arguments[0].click()", this.deleteCredentialButton);
+		
+		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
+		
 	
 	}
 	

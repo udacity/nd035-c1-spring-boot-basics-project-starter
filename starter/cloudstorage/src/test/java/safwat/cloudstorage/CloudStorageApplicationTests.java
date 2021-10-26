@@ -87,6 +87,9 @@ class CloudStorageApplicationTests {
 		NotePage notePage = new NotePage(driver);
 		notePage.createNote("note1", "i am a note", driver);
 		
+		
+		
+		
 		boolean check = notePage.checkNote();
 		assertTrue(check);
 		
@@ -153,7 +156,6 @@ class CloudStorageApplicationTests {
 		
 		
 		
-		
 	}
 	
 	@Test
@@ -190,7 +192,6 @@ class CloudStorageApplicationTests {
 
 		
 	}
-	
 	
 	
 	

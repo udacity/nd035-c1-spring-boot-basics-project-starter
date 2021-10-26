@@ -59,6 +59,11 @@ public class NotePage {
 		this.inputNoteDescription.sendKeys(description);
 		
 		this.saveNoteButton.click();
+		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
+		
+		
 	}
 	
 	
@@ -80,6 +85,10 @@ public class NotePage {
 		
 		this.saveNoteButton.click();
 		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
+		
+		
 		
 	}
 	
@@ -88,6 +97,10 @@ public class NotePage {
 		jse.executeScript("arguments[0].click()", nav_notes_tab);
 		
 		jse.executeScript("arguments[0].click()", this.deleteNoteButton);
+		
+		
+		WebElement homeLink = driver.findElement(By.linkText("here"));
+		jse.executeScript("arguments[0].click()", homeLink);
 		
 		
 
