@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/signup")
@@ -25,26 +26,35 @@ public class SignupController {
     }
 
     @PostMapping
-    public String signupUser(@ModelAttribute User user, Model model) {
+    public String signupUser(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+        System.out.println("signupUser");
         String signupError = null;
 
         if (!userService.isUserAvailable(user.getUsername())) {
             signupError = "The username already exists.";
+            showError(model, signupError);
         }
 
         if (signupError == null) {
             int rowsAdded = userService.createUser(user);
             if (rowsAdded < 0) {
                 signupError = "There was an error signing up. Please try again";
+                showError(model, signupError);
             }
 
             if (signupError == null) {
-                model.addAttribute("signupSuccess", true);
+                redirectAttributes.addFlashAttribute("signupSuccessMessage", true);
+                return "redirect:/login";
             } else {
-                model.addAttribute("signupError", signupError);
+                System.out.println("Signup error, trying to redirect!");
+                showError(model, signupError);
             }
         }
 
         return "signup";
+    }
+
+    private void showError(Model model, String signupError) {
+        model.addAttribute("signupError", signupError);
     }
 }
