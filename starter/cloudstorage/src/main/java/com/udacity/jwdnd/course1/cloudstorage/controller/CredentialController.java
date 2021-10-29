@@ -28,7 +28,7 @@ public class CredentialController {
         Integer userId = userService.getUserId(authentication.getName());
 
         if (credentialService.isCredentialInDatabase(credentialForm.getUrl(), credentialForm.getUserName())) {
-            model.addAttribute("errorMessage", "This credential already exists!");
+            model.addAttribute("errorMessage", "A credential for this url and username already exists!");
         } else {
             try {
                 if (credentialForm.getCredentialId() == null) {
