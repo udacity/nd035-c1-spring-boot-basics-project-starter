@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,21 +18,29 @@ public class FileService {
         this.fileMapper = fileMapper;
     }
 
-    public Integer uploadFile(Integer userId, MultipartFile uploadFile) throws IOException {
+    public void uploadFile(Integer userId, MultipartFile uploadFile) {
         System.out.println("Trying to add new file...");
-        File newFile = new File(
-                null,
-                uploadFile.getOriginalFilename(),
-                uploadFile.getContentType(),
-                Long.toString(uploadFile.getSize()),
-                userId,
-                uploadFile.getBytes()
-        );
-        return fileMapper.insert(newFile);
+        try {
+            File newFile = new File(
+                    null,
+                    uploadFile.getOriginalFilename(),
+                    uploadFile.getContentType(),
+                    Long.toString(uploadFile.getSize()),
+                    userId,
+                    uploadFile.getBytes()
+            );
+            fileMapper.insert(newFile);
+        } catch (MaxUploadSizeExceededException | IOException e) {
+            e.getLocalizedMessage();
+        }
     }
 
     public void deleteFile(Integer fileId) {
         fileMapper.delete(fileId);
+    }
+
+    public Boolean isFileInDatabase(String fileName) {
+        return fileMapper.getFileByName(fileName) == null;
     }
 
     public File getFileById(Integer fileId) {

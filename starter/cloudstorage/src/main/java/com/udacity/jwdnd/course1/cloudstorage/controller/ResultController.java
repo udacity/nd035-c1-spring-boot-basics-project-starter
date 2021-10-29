@@ -75,15 +75,19 @@ public class ResultController {
     public String uploadFileForUser(Authentication authentication, MultipartFile fileUpload, Model model) {
         Integer userId = userService.getUserId(authentication.getName());
 
-        try {
-            if (fileUpload.getSize() > 0) {
-                fileService.uploadFile(userId, fileUpload);
-                model.addAttribute("successMessage", true);
-            } else {
-                model.addAttribute("errorMessage", "Did you forget to select a file to upload?");
+        if (!fileService.isFileInDatabase(fileUpload.getOriginalFilename())) {
+            model.addAttribute("errorMessage", "The file already exists.");
+        } else {
+            try {
+                if (fileUpload.getSize() > 0) {
+                    fileService.uploadFile(userId, fileUpload);
+                    model.addAttribute("successMessage", true);
+                } else {
+                    model.addAttribute("errorMessage", "Did you forget to select a file to upload?");
+                }
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", e.getLocalizedMessage());
             }
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getLocalizedMessage());
         }
 
         return "result";
@@ -99,7 +103,7 @@ public class ResultController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(file.getFileData());
     }
 
