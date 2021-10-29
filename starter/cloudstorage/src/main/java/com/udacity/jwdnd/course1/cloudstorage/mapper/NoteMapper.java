@@ -9,7 +9,10 @@ import java.util.List;
 public interface NoteMapper {
 
     @Select("SELECT * FROM NOTES WHERE noteid = #{noteId}")
-    Note getNote(Integer noteId);
+    Note getNoteById(Integer noteId);
+
+    @Select("SELECT * FROM NOTES WHERE notetitle = #{noteTitle} AND notedescription = #{noteDescription}")
+    Note getNoteByContent(String noteTitle, String noteDescription);
 
     @Select("SELECT * FROM NOTES WHERE userid = #{userId}")
     List<Note> getAllNotesForUser(Integer userid);

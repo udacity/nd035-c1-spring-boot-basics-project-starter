@@ -40,7 +40,7 @@ public class FileService {
     }
 
     public Boolean isFileInDatabase(String fileName) {
-        return fileMapper.getFileByName(fileName) == null;
+        return fileMapper.getFileByName(fileName) != null;
     }
 
     public File getFileById(Integer fileId) {

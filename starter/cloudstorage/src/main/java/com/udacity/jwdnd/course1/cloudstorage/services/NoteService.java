@@ -42,7 +42,11 @@ public class NoteService {
     }
 
     public Note getNoteById(Integer noteId) {
-        return noteMapper.getNote(noteId);
+        return noteMapper.getNoteById(noteId);
+    }
+
+    public Boolean isNoteInDatabase(String noteTitle, String noteDescription) {
+        return noteMapper.getNoteByContent(noteTitle, noteDescription) != null;
     }
 
     public List<Note> getNotesList(Integer userid) {

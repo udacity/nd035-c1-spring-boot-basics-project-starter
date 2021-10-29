@@ -42,15 +42,19 @@ public class ResultController {
     public String addNoteForUser(Authentication authentication, NoteForm noteForm, Model model) {
         Integer userId = userService.getUserId(authentication.getName());
 
-        try {
-            if (noteForm.getNoteId() == null) {
-                noteService.addNote(userId, noteForm);
-            } else {
-                noteService.editNote(userId, noteForm);
+        if (noteService.isNoteInDatabase(noteForm.getNoteTitle(), noteForm.getNoteDescription())) {
+            model.addAttribute("errorMessage", "This note already exists!");
+        } else {
+            try {
+                if (noteForm.getNoteId() == null) {
+                    noteService.addNote(userId, noteForm);
+                } else {
+                    noteService.editNote(userId, noteForm);
+                }
+                model.addAttribute("successMessage", true);
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", e.getLocalizedMessage());
             }
-            model.addAttribute("successMessage", true);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getLocalizedMessage());
         }
 
         return "result";
@@ -75,7 +79,7 @@ public class ResultController {
     public String uploadFileForUser(Authentication authentication, MultipartFile fileUpload, Model model) {
         Integer userId = userService.getUserId(authentication.getName());
 
-        if (!fileService.isFileInDatabase(fileUpload.getOriginalFilename())) {
+        if (fileService.isFileInDatabase(fileUpload.getOriginalFilename())) {
             model.addAttribute("errorMessage", "The file already exists.");
         } else {
             try {
@@ -126,15 +130,19 @@ public class ResultController {
     public String addCredentialForUser(Authentication authentication, CredentialForm credentialForm, Model model) {
         Integer userId = userService.getUserId(authentication.getName());
 
-        try {
-            if (credentialForm.getCredentialId() == null) {
-                credentialService.addCredential(userId, credentialForm);
-            } else {
-                credentialService.editCredential(credentialForm);
+        if (credentialService.isCredentialInDatabase(credentialForm.getUrl(), credentialForm.getUserName())) {
+            model.addAttribute("errorMessage", "This credential already exists!");
+        } else {
+            try {
+                if (credentialForm.getCredentialId() == null) {
+                    credentialService.addCredential(userId, credentialForm);
+                } else {
+                    credentialService.editCredential(credentialForm);
+                }
+                model.addAttribute("successMessage", true);
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", e.getLocalizedMessage());
             }
-            model.addAttribute("successMessage", true);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getLocalizedMessage());
         }
 
         return "result";

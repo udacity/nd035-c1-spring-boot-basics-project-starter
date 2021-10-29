@@ -40,7 +40,7 @@ public class CredentialService {
 
     public void editCredential(CredentialForm credentialForm) {
         System.out.println("Editing credential with id:" + credentialForm.getCredentialId());
-        Credential editCredential = credentialMapper.getCredential(credentialForm.getCredentialId());
+        Credential editCredential = credentialMapper.getCredentialById(credentialForm.getCredentialId());
         String key = editCredential.getKey();
 
         if (!editCredential.getUrl().equals(credentialForm.getUrl())) {
@@ -66,7 +66,11 @@ public class CredentialService {
     }
 
     public Credential getCredentialById(Integer credentialId) {
-        return credentialMapper.getCredential(credentialId);
+        return credentialMapper.getCredentialById(credentialId);
+    }
+
+    public Boolean isCredentialInDatabase(String url, String userName) {
+        return credentialMapper.getCredentialByContent(url, userName) != null;
     }
 
     public List<Credential> getCredentialListForUser(Integer userid) {
