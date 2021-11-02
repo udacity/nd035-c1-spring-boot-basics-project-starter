@@ -27,19 +27,22 @@ public class CredentialController {
     public String addCredentialForUser(Authentication authentication, CredentialForm credentialForm, Model model) {
         Integer userId = userService.getUserId(authentication.getName());
 
-        if (credentialService.isCredentialInDatabase(credentialForm.getUrl(), credentialForm.getUserName())) {
-            model.addAttribute("errorMessage", "A credential for this url and username already exists!");
-        } else {
-            try {
-                if (credentialForm.getCredentialId() == null) {
-                    credentialService.addCredential(userId, credentialForm);
+        try {
+            if (credentialForm.getCredentialId() == null) {
+                if (!credentialService.addCredential(userId, credentialForm)) {
+                    model.addAttribute("errorMessage", "There is already a credential for this url and user.");
                 } else {
-                    credentialService.editCredential(credentialForm);
+                    model.addAttribute("successMessage", true);
                 }
-                model.addAttribute("successMessage", true);
-            } catch (Exception e) {
-                model.addAttribute("errorMessage", e.getLocalizedMessage());
+            } else {
+                if (!credentialService.editCredential(credentialForm)) {
+                    model.addAttribute("errorMessage", "Credential entry has not changed.");
+                } else {
+                    model.addAttribute("successMessage", true);
+                }
             }
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
         }
 
         return "result";

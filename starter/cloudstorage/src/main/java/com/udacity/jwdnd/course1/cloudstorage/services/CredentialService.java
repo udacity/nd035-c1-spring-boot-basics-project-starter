@@ -21,33 +21,43 @@ public class CredentialService {
 
     }
 
-    public Integer addCredential(Integer userId, CredentialForm credentialForm) {
+    public boolean addCredential(Integer userId, CredentialForm credentialForm) {
         System.out.println("Trying to add new credential...");
         String randomKey = createRandomKey();
         String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), randomKey);
 
-        Credential newCredential = new Credential(
-                null,
-                credentialForm.getUrl(),
-                credentialForm.getUserName(),
-                randomKey,
-                encryptedPassword,
-                userId
-        );
-
-        return credentialMapper.insert(newCredential);
+        if (isCredentialInDatabase(credentialForm.getUrl(), credentialForm.getUserName())) {
+            return false;
+        } else {
+            Credential newCredential = new Credential(
+                    null,
+                    credentialForm.getUrl(),
+                    credentialForm.getUserName(),
+                    randomKey,
+                    encryptedPassword,
+                    userId
+            );
+            credentialMapper.insert(newCredential);
+            return true;
+        }
     }
 
-    public void editCredential(CredentialForm credentialForm) {
+    public Boolean editCredential(CredentialForm credentialForm) {
         System.out.println("Editing credential with id:" + credentialForm.getCredentialId());
         Credential editCredential = credentialMapper.getCredentialById(credentialForm.getCredentialId());
         String key = editCredential.getKey();
 
-        if (!editCredential.getUrl().equals(credentialForm.getUrl())) {
+        boolean hasUrlChanged = false;
+        boolean hasUserNameChanged = false;
+        boolean hasPasswordChanged = false;
+
+         if (!editCredential.getUrl().equals(credentialForm.getUrl())) {
             editCredential.setUrl(credentialForm.getUrl());
+            hasUrlChanged = true;
         }
         if (!editCredential.getUserName().equals(credentialForm.getUserName())) {
             editCredential.setUserName(credentialForm.getUserName());
+            hasUserNameChanged = true;
         }
         String decryptedPass = encryptionService.decryptValue(editCredential.getPassword(), key);
         String newPassword = credentialForm.getPassword();
@@ -56,9 +66,15 @@ public class CredentialService {
             String newEncryptedPass = encryptionService.encryptValue(newPassword, newKey);
             editCredential.setKey(newKey);
             editCredential.setPassword(newEncryptedPass);
+            hasPasswordChanged = true;
         }
 
-        credentialMapper.updateCredential(editCredential);
+        if (hasUrlChanged || hasUserNameChanged || hasPasswordChanged) {
+            credentialMapper.updateCredential(editCredential);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void deleteCredential(Integer credentialId) {
