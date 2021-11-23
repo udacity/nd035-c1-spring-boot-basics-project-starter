@@ -40,7 +40,7 @@ jobs:
            PR title: ${{ github.event.pull_request.title }}  
            PR description: ${{ github.event.pull_request.description }}  
            In addition, please resolve other issues, if any. 
-        fields: '{"components": [{"name":"nd013 - Self Driving Car Engineer ND"}], "customfield_16449":"https://classroom.udacity.com/", "customfield_16450":"Resolve the PR", "labels": ["github"], "priority":{"id": "4"}}'
+        fields: '{"components": [{"name":"nd035 - Java Developer ND"}], "customfield_16449":"https://classroom.udacity.com/", "customfield_16450":"Resolve the PR", "labels": ["github"], "priority":{"id": "4"}}'
 
     - name: Log created issue
       run: echo "Issue ${{ steps.create.outputs.issue }} was created"
