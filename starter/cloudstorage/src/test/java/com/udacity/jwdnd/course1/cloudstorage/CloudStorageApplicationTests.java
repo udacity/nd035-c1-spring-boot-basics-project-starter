@@ -44,12 +44,19 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
+	/**
+	 * PLEASE DO NOT DELETE THIS method.
+	 * Helper method for Udacity-supplied sanity checks.
+	 **/
 	private void doMockSignUp(String firstName, String lastName, String userName, String password){
 		// Create a dummy account for logging in later.
+
+		// Visit the sign-up page.
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
 		driver.get("http://localhost:" + this.port + "/signup");
 		webDriverWait.until(ExpectedConditions.titleContains("Sign Up"));
 		
+		// Fill out credentials
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputFirstName")));
 		WebElement inputFirstName = driver.findElement(By.id("inputFirstName"));
 		inputFirstName.click();
@@ -70,16 +77,30 @@ class CloudStorageApplicationTests {
 		inputPassword.click();
 		inputPassword.sendKeys(password);
 
+		// Attempt to sign up.
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonSignUp")));
 		WebElement buttonSignUp = driver.findElement(By.id("buttonSignUp"));
 		buttonSignUp.click();
 
-		Assertions.assertEquals(driver.findElement(By.id("success-msg")).getText(), "You successfully signed up! Please continue to the login page.");
+		/* Check that the sign up was successful. 
+		// You may have to modify the element "success-msg" and the sign-up 
+		// success message below depening on the rest of your code.
+		*/
+		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
+	}
 
-
+	
+	
+	/**
+	 * PLEASE DO NOT DELETE THIS method.
+	 * Helper method for Udacity-supplied sanity checks.
+	 **/
+	private void doLogIn(String userName, String password)
+	{
 		// Log in to our dummy account.
 		driver.get("http://localhost:" + this.port + "/login");
-		
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
 		WebElement loginUserName = driver.findElement(By.id("inputUsername"));
 		loginUserName.click();
@@ -104,6 +125,26 @@ class CloudStorageApplicationTests {
 	 * This test is provided by Udacity to perform some basic sanity testing of 
 	 * your code to ensure that it meets certain rubric criteria. 
 	 * 
+	 * If this test is failing, please ensure that you are handling redirecting users 
+	 * back to the login page after a succesful sign up.
+	 * Read more about the requirement in the rubric: 
+	 * https://review.udacity.com/#!/rubrics/2724/view 
+	 */
+	@Test
+	public void testRedirection() {
+		// Create a test account
+		doMockSignUp("Redirection","Test","RT","123");
+		
+		// Check if we have been redirected to the log in page.
+		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
+
+	/**
+	 * PLEASE DO NOT DELETE THIS TEST. You may modify this test to work with the 
+	 * rest of your code. 
+	 * This test is provided by Udacity to perform some basic sanity testing of 
+	 * your code to ensure that it meets certain rubric criteria. 
+	 * 
 	 * If this test is failing, please ensure that you are handling bad URLs 
 	 * gracefully, for example with a custom error page.
 	 * 
@@ -114,6 +155,7 @@ class CloudStorageApplicationTests {
 	public void testBadUrl() {
 		// Create a test account
 		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
 		
 		// Try to access a random made-up URL.
 		driver.get("http://localhost:" + this.port + "/some-random-page");
@@ -137,6 +179,7 @@ class CloudStorageApplicationTests {
 	public void testLargeUpload() {
 		// Create a test account
 		doMockSignUp("Large File","Test","LFT","123");
+		doLogIn("LFT", "123");
 
 		// Try to upload an arbitrary large file
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
