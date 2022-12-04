@@ -4,7 +4,7 @@ public class NoteForm {
 
     private String title;
     private String description;
-    private String id;
+    private String noteId;
 
     public String getTitle() {
         return title;
@@ -23,10 +23,10 @@ public class NoteForm {
     }
 
     public String getId() {
-        return id;
+        return noteId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.noteId = id;
     }
 }

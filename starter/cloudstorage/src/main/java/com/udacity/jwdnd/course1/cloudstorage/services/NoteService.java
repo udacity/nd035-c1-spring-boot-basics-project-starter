@@ -25,16 +25,23 @@ public class NoteService {
         return notesMapper.getNote(noteId);
     }
 
-    public void insert(Note note) {
-        notesMapper.insert(note);
+    public int insert(Note note) {
+        return notesMapper.insert(note);
     }
 
-    public Note createNote(String title, String description, String userName) {
+    public Note createNote(String title, String description, int userId) {
         Note note =  new Note();
         note.setNoteTitle(title);
         note.setNoteDescription(description);
+        note.setUserId(userId);
 
+        int noteId = insert(note);
+        note.setNoteId(noteId);
         return note;
+    }
+
+    public void updateNote(int noteId, String title, String description) {
+        notesMapper.updateNote(noteId, title, description);
     }
 
     public void deleteNote(int noteId) {
