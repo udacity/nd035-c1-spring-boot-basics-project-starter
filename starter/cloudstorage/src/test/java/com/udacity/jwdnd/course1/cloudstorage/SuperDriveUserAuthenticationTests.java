@@ -10,10 +10,12 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SuperDriveAuthenticationTests {
+public class SuperDriveUserAuthenticationTests {
 
     @LocalServerPort
     public int port;
@@ -73,7 +75,7 @@ public class SuperDriveAuthenticationTests {
         signUpPage.signupNewUser("Sergio", "T", testUsername, testPassword);
 
         signUpPage.goToLoginPage(driver);
-        //driver.get(baseUrl + "/login");
+        driver.get(baseUrl + "/login");
 
         // log in user
         loginPage.loginUser(testUsername, testPassword);
@@ -83,6 +85,8 @@ public class SuperDriveAuthenticationTests {
 
         // logout
         homePage.logout();
+        driver.get(baseUrl + "/home");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals("Login", driver.getTitle());
     }
 }

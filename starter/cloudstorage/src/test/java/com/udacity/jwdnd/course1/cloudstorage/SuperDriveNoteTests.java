@@ -13,12 +13,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SuperDriveNoteTests {
@@ -54,6 +51,13 @@ public class SuperDriveNoteTests {
     @Test
     public void whenNoteCreated_thenNoteDisplayed() throws InterruptedException {
        createNewNote();
+
+        // Check note added
+        assertEquals("note1", homePage.getFirstNoteTitle());
+        assertEquals("test1", homePage.getFirstNoteDescription());
+
+        homePage.deleteNote();
+        homePage.logout();
     }
 
     @Test
@@ -65,6 +69,9 @@ public class SuperDriveNoteTests {
         homePage.goToNotesTab();
         assertEquals("new title", homePage.getFirstNoteTitle());
         assertEquals("new description", homePage.getFirstNoteDescription());
+
+        homePage.deleteNote();
+        homePage.logout();
     }
 
     @Test
@@ -74,12 +81,9 @@ public class SuperDriveNoteTests {
         homePage.deleteNote();
         Thread.sleep(1000);
 
-        try {
-            homePage.getFirstNoteTitle();
-            fail("Note not deleted");
-        } catch (NoSuchElementException e) {
-            assertTrue(true);
-        }
+        assertFalse(homePage.isNotePresent());
+
+        homePage.logout();
     }
     private void createNewNote() throws InterruptedException {
         driver.get(baseUrl + "/signup");
@@ -95,10 +99,6 @@ public class SuperDriveNoteTests {
         homePage.createNote("note1", "test1");
         Thread.sleep(3000);
         homePage.goToNotesTab();
-
-        // Check note added
-        assertEquals("note1", homePage.getFirstNoteTitle());
-        assertEquals("test1", homePage.getFirstNoteDescription());
     }
 
     private void signupAndLogin(String userName, String password) {
