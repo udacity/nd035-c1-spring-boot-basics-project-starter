@@ -12,12 +12,10 @@
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
             <form action="#" method="POST">
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" th:if="${isInvalidCred}">
                     Invalid username or password
                 </div>
-                <div class="alert alert-dark">
-                    You have been logged out
-                </div>
+                <div class="alert alert-dark" th:if="${isLogOut}" th:text="${logoutSuccessMess}"></div>
                 <div class="form-group">
                     <label for="inputUsername">Username</label>
                     <input type="input" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>

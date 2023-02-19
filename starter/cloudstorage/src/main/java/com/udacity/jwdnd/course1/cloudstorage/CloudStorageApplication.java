@@ -3,7 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.udacity.jwdnd.course1.cloudstorage")
 public class CloudStorageApplication {
 
 	public static void main(String[] args) {
