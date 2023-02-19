@@ -11,13 +11,13 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <div class="form-group">
-                <label><a>Back to Login</a></label>
+                <label><a href="/login">Back to Login</a></label>
             </div>
 
             <h1 class="display-5">Sign Up</h1>
             <form action="#" method="POST">
-                <div id="success-msg" class="alert alert-dark">
-                    You successfully signed up! Please continue to the <a>login</a> page.
+                <div th:if="${isSignupSuccess}" th:text="${signupSuccessMess}"
+                     id="success-msg" class="alert alert-dark">
                 </div>
                 <div class="alert alert-danger">
                     <span>Example Signup Error Message</span>

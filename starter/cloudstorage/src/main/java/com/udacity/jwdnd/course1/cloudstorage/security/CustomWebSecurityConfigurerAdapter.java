@@ -13,11 +13,15 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
         http.authorizeRequests().antMatchers("/login/**").permitAll();
+        http.authorizeRequests().antMatchers("/signup/**").permitAll();
         http.authorizeRequests().antMatchers("/logout/**").permitAll();
         http.authorizeRequests().antMatchers("/css/**").permitAll();
         http.authorizeRequests().antMatchers("/js/**").permitAll();
-        http.formLogin().loginPage("/login").and().logout().logoutUrl("/logout");
+        http.formLogin().loginPage("/login").and().logout().logoutUrl(
+                "/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
         http.authorizeRequests().anyRequest().authenticated();
     }
 }

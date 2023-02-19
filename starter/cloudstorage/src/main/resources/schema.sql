@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS CREDENTIALS (
     credentialid INT PRIMARY KEY auto_increment,
     url VARCHAR(100),
     username VARCHAR (30),
-    token VARCHAR(256),
+    key VARCHAR(256),
     password VARCHAR(256),
     userid INT,
     foreign key (userid) references USERS(userid)
