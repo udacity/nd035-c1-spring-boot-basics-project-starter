@@ -2,12 +2,11 @@ package com.udacity.jwdnd.course1.cloudstorage.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +27,9 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 "/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
         http.authorizeRequests().anyRequest().authenticated();
+        // always redirect to homepage after login
+        http.requestCache().requestCache(new NullRequestCache());
+        http.headers().frameOptions().disable();
     }
 
     @Override
