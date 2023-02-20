@@ -15,31 +15,37 @@
             </div>
 
             <h1 class="display-5">Sign Up</h1>
-            <form action="#" method="POST">
-                <div th:if="${isSignupSuccess}" th:text="${signupSuccessMess}"
+            <form th:object="${user}" th:action="@{/signup}" method="POST">
+                <div th:if="${isSignupSuccess}" th:utext="${signupMess}"
                      id="success-msg" class="alert alert-dark">
                 </div>
-                <div class="alert alert-danger">
-                    <span>Example Signup Error Message</span>
+                <div class="alert alert-danger" th:if="${isSignupFail}"
+                     th:utext="${signupMess}">
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputFirstName">First Name</label>
-                        <input type="input" name="firstName" class="form-control" id="inputFirstName" placeholder="Enter First Name" maxlength="20" required>
+                        <input th:field="*{firstname}" type="input"
+                               name="firstName"
+                                class="form-control" id="inputFirstName" placeholder="Enter First Name" maxlength="20" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputLastName">Last Name</label>
-                        <input type="input" name="lastName" class="form-control" id="inputLastName" placeholder="Enter Last Name" maxlength="20" required>
+                        <input th:field="*{lastname}" type="input"
+                               name="lastName"
+                                class="form-control" id="inputLastName" placeholder="Enter Last Name" maxlength="20" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputUsername">Username</label>
-                        <input type="input" name="username" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                        <input th:field="*{username}" type="input" name="username"
+                                class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Password</label>
-                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required>
+                        <input th:field="*{password}" type="password" name="password"
+                                class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" id="buttonSignUp">Sign Up</button>
