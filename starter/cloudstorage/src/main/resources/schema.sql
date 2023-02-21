@@ -41,3 +41,5 @@ INSERT INTO USERS (username, salt, password, firstname, lastname) VALUES
 
 INSERT INTO NOTES (notetitle, notedescription, userid) VALUES ('Test Note 1', 'Some Notes 1', 1);
 INSERT INTO NOTES (notetitle, notedescription, userid) VALUES ('Test Note 2', 'Some Notes 2', 1);
+
+INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES ('google.com', 'Dat', 'dfKO8IANpC0qsR9Klpk53w==', '6lRyQbRq273ow/pjd9LyAw==', 1)
