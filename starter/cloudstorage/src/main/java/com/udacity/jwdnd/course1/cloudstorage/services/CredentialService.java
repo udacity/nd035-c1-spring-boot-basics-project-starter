@@ -43,6 +43,10 @@ public class CredentialService {
         return credentialResponses;
     }
 
+    public int deleteCredential(Integer credentialId) {
+        return credentialMapper.deleteCredential(credentialId);
+    }
+
     private String getDecryptedPassword(String key, String encryptedPassword) {
         return encryptionService.decryptValue(encryptedPassword, key);
     }

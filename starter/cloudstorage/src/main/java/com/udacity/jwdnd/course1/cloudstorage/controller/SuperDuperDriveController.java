@@ -60,4 +60,11 @@ public class SuperDuperDriveController {
         }
         return "redirect:/home";
     }
+
+    @GetMapping(path = "/credential/{credentialId}/delete")
+    public String deleteCredential(Model model, @PathVariable("credentialId") String credentialId) {
+
+        boolean isCredentialDeleted = credentialService.deleteCredential(Integer.parseInt(credentialId)) != 0;
+        return "redirect:/home";
+    }
 }
