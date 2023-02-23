@@ -8,13 +8,9 @@ import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class SuperDuperDriveController {
@@ -44,7 +40,14 @@ public class SuperDuperDriveController {
         } else {
             boolean isNoteAdded = noteService.addNote(note) != 0;
         }
-        return "redirect:home";
+        return "redirect:/home";
+    }
+
+    @GetMapping(path = "/note/{noteId}/delete")
+    public String deleteNote(Model model, @PathVariable("noteId") String noteId) {
+
+        boolean isNoteDeleted = noteService.deleteNote(Integer.parseInt(noteId)) != 0;
+        return "redirect:/home";
     }
 
     @PostMapping(path = "/credential")
@@ -55,6 +58,6 @@ public class SuperDuperDriveController {
         } else {
             boolean isCredentialAdded = credentialService.addCredential(credential) != 0;
         }
-        return "redirect:home";
+        return "redirect:/home";
     }
 }
