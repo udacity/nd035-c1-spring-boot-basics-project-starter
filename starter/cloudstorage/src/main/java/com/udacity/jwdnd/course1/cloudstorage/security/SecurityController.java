@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class SecurityController {
@@ -22,21 +23,21 @@ public class SecurityController {
     }
 
     @PostMapping(path = "/signup")
-    public String doSignup(Model model, @ModelAttribute("user") User user) {
-
+    public String doSignup(Model model, RedirectAttributes redirectAttributes, @ModelAttribute("user") User user) {
         boolean isCreateUserSuccess = userService.createUser(user) != 0;
         model.addAttribute("isSignupSuccess", isCreateUserSuccess);
+        redirectAttributes.addFlashAttribute("isSignupSuccess", isCreateUserSuccess);
         if (isCreateUserSuccess) {
-            model.addAttribute("signupMess", "You successfully signed up! " +
+            redirectAttributes.addFlashAttribute("signupMess", "You successfully signed up! " +
                     "Please " +
                     "continue " +
                     "to " +
                     "the <a href=\"/login\">login</a> page.");
-
+            return "redirect:/login";
         } else {
             model.addAttribute("signupMess", "<span>Example Signup Error Message</span>");
+            return "signup";
         }
-        return "redirect:/login";
     }
 
     @GetMapping(path = "/login")
