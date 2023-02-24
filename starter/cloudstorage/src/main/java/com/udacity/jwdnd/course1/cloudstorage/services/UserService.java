@@ -27,8 +27,6 @@ public class UserService {
     public int createUser(User user) {
         String encodedSalt = userDetailService.generateRandomKey();
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-        return userMapper.insertUser(new User(null, user.getUsername(),
-                hashedPassword, encodedSalt, user.getFirstname(),
-                user.getLastname()));
+        return userMapper.insertUser(user.getUsername(), encodedSalt, hashedPassword, user.getFirstname(), user.getLastname());
     }
 }

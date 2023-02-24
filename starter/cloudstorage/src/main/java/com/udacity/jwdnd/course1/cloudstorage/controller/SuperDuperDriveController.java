@@ -99,4 +99,11 @@ public class SuperDuperDriveController {
         httpHeaders.setContentDisposition(ContentDisposition.builder("attachment").filename(file.getFileName()).build());
         return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.parseMediaType(file.getContentType())).body(file.getFileData());
     }
+
+    @GetMapping(path = "/file/{fileId}/delete")
+    public String deleteFile(Model model, @PathVariable("fileId") String fileId) {
+
+        boolean isFileDeleted = fileService.deleteFile(Integer.parseInt(fileId)) != 0;
+        return "redirect:/home";
+    }
 }

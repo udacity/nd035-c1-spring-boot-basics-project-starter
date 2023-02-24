@@ -36,7 +36,7 @@ public class SecurityController {
         } else {
             model.addAttribute("signupMess", "<span>Example Signup Error Message</span>");
         }
-        return "signup";
+        return "redirect:/login";
     }
 
     @GetMapping(path = "/login")

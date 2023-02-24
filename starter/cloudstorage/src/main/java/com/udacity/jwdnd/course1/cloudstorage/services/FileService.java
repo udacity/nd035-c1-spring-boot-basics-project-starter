@@ -28,4 +28,8 @@ public class FileService {
     public File getFileByFileId(Integer fileId) {
         return fileMapper.getFilesByFileIdAndUserId(fileId, userDetailService.getCurrentUserId());
     }
+
+    public int deleteFile(Integer fileId) {
+        return fileMapper.deleteFile(fileId);
+    }
 }
