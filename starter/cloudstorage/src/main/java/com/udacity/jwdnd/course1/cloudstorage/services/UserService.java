@@ -25,8 +25,21 @@ public class UserService {
     }
 
     public int createUser(User user) {
-        String encodedSalt = userDetailService.generateRandomKey();
-        String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-        return userMapper.insertUser(user.getUsername(), encodedSalt, hashedPassword, user.getFirstname(), user.getLastname());
+        int defaultStatus = 0;
+        if (!isUsernameExisted(user.getUsername())) {
+            String encodedSalt = userDetailService.generateRandomKey();
+            String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
+            defaultStatus = userMapper.insertUser(user.getUsername(), encodedSalt, hashedPassword, user.getFirstname(), user.getLastname());
+        }
+        return defaultStatus;
+    }
+
+    private boolean isUsernameExisted(String username) {
+        boolean isUsernameExisted = false;
+        User user = userMapper.getUserByUsername(username);
+        if (user != null) {
+            isUsernameExisted = true;
+        }
+        return isUsernameExisted;
     }
 }

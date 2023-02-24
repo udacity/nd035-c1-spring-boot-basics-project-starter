@@ -35,8 +35,9 @@ public class SecurityController {
                     "the <a href=\"/login\">login</a> page.");
             return "redirect:/login";
         } else {
-            model.addAttribute("signupMess", "<span>Example Signup Error Message</span>");
-            return "signup";
+            model.addAttribute("isSignupFail", true);
+            model.addAttribute("signupMess", "Can not sign up, duplicate Username");
+            return "/signup";
         }
     }
 
