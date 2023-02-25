@@ -116,7 +116,6 @@ class CloudStorageApplicationTests {
 		loginButton.click();
 
 		webDriverWait.until(ExpectedConditions.titleContains("Home"));
-
 	}
 
 	private void dologOut() {
@@ -210,6 +209,57 @@ class CloudStorageApplicationTests {
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialSubmitButton")));
 		WebElement credentialSubmitButton = driver.findElement(By.id("credentialSubmitButton"));
 		credentialSubmitButton.click();
+	}
+
+	private void doEditCredentialNote(String credentialUrl, String credentialUsername, String credentialPassword) {
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("editCredentialButton")));
+		WebElement editCredentialButton = driver.findElement(By.id("editCredentialButton"));
+		editCredentialButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+		WebElement credentialUrlInput = driver.findElement(By.id("credential-url"));
+		credentialUrlInput.clear();
+		credentialUrlInput.click();
+		credentialUrlInput.sendKeys(credentialUrl);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+		WebElement credentialUsernameInput = driver.findElement(By.id("credential-username"));
+		credentialUsernameInput.clear();
+		credentialUsernameInput.click();
+		credentialUsernameInput.sendKeys(credentialUsername);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+		WebElement credentialPasswordInput = driver.findElement(By.id("credential-password"));
+		credentialPasswordInput.clear();
+		credentialPasswordInput.click();
+		credentialPasswordInput.sendKeys(credentialPassword);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialSubmitButton")));
+		WebElement credentialSubmitButton = driver.findElement(By.id("credentialSubmitButton"));
+		credentialSubmitButton.click();
+	}
+
+	private boolean isPlainPasswordDisplayed(String plainPassword) {
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("editCredentialButton")));
+		WebElement editCredentialButton = driver.findElement(By.id("editCredentialButton"));
+		editCredentialButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+		WebElement credentialPasswordOutput = driver.findElement(By.id("credential-password"));
+
+		return plainPassword.equals(credentialPasswordOutput.getAttribute("value"));
 	}
 
 	/**
@@ -382,6 +432,12 @@ class CloudStorageApplicationTests {
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteDescription")));
 		noteDescriptionOutput = driver.findElement(By.id("noteDescription"));
 
+		// to make sure that there is no new note added
+		int countNoteTitle = driver.findElements(By.id("noteTitle")).size();
+		int countNoteDescription = driver.findElements(By.id("noteDescription")).size();
+
+		Assertions.assertEquals(1, countNoteTitle);
+		Assertions.assertEquals(1, countNoteDescription);
 		Assertions.assertEquals(noteTitleEdited, noteTitleOutput.getText());
 		Assertions.assertEquals(noteDescriptionEdited, noteDescriptionOutput.getText());
 	}
@@ -453,10 +509,67 @@ class CloudStorageApplicationTests {
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialPassword")));
 		WebElement credentialPasswordOutput = driver.findElement(By.id("credentialPassword"));
 
+		Assertions.assertEquals(credentialUrl, credentialUrlOutput.getText());
+		Assertions.assertEquals(credentialUsername, credentialUsernameOutput.getText());
+		Assertions.assertNotEquals(plainCredentialPassword, credentialPasswordOutput.getText());
+	}
+
+	@Test
+	public void testAddCredentialThenEditCredentialAndVerifyCredentialDisplay() {
+		doMockSignUp("Credential","Test","Credential","123");
+		doLogIn("Credential", "123");
+
+		String credentialUrl = "test-url.com";
+		String credentialUsername = "test";
+		String plainCredentialPassword = "password";
+
+		doAddCredential(credentialUrl, credentialUsername, plainCredentialPassword);
+
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUrl")));
+		WebElement credentialUrlOutput = driver.findElement(By.id("credentialUrl"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUsername")));
+		WebElement credentialUsernameOutput = driver.findElement(By.id("credentialUsername"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialPassword")));
+		WebElement credentialPasswordOutput = driver.findElement(By.id("credentialPassword"));
 
 		Assertions.assertEquals(credentialUrl, credentialUrlOutput.getText());
 		Assertions.assertEquals(credentialUsername, credentialUsernameOutput.getText());
 		Assertions.assertNotEquals(plainCredentialPassword, credentialPasswordOutput.getText());
+
+		Assertions.assertTrue(isPlainPasswordDisplayed(plainCredentialPassword));
+
+		String credentialUrlEdit = "test-url-edit.com";
+		String credentialUsernameEdit = "test-edit";
+		String plainCredentialPasswordEdit = "password-edit";
+		doEditCredentialNote(credentialUrlEdit, credentialUsernameEdit, plainCredentialPasswordEdit);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUrl")));
+		credentialUrlOutput = driver.findElement(By.id("credentialUrl"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUsername")));
+		credentialUsernameOutput = driver.findElement(By.id("credentialUsername"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialPassword")));
+		credentialPasswordOutput = driver.findElement(By.id("credentialPassword"));
+
+		int countCredentialUrl = driver.findElements(By.id("credentialUrl")).size();
+		int countCredentialUsername = driver.findElements(By.id("credentialUsername")).size();
+		int countCredentialPassword = driver.findElements(By.id("credentialPassword")).size();
+
+		Assertions.assertEquals(1, countCredentialUrl);
+		Assertions.assertEquals(1, countCredentialUsername);
+		Assertions.assertEquals(1, countCredentialPassword);
+		Assertions.assertEquals(credentialUrlEdit, credentialUrlOutput.getText());
+		Assertions.assertEquals(credentialUsernameEdit, credentialUsernameOutput.getText());
+		Assertions.assertNotEquals(plainCredentialPasswordEdit, credentialPasswordOutput.getText());
 	}
 
 }
