@@ -78,7 +78,7 @@
                                 <tbody>
                                     <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button"
+                                            <button id="editNoteButton" type="button"
                                                     class="btn btn-success"
                                                     onclick="showNoteModal()"
                                             th:attr="onclick=|showNoteModal('${note.noteId}', '${note.noteTitle}', '${note.noteDescription}')|">Edit</button>
