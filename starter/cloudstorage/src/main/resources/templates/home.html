@@ -25,6 +25,7 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="alert alert-danger" th:if="${isError}" th:utext="${errorMess}"></div>
+                    <div th:if="${isSuccess}" th:utext="${successMess}" id="success-msg" class="alert alert-dark"></div>
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
                         <form th:action="@{/file}" th:object="${files}" enctype="multipart/form-data" method="POST">
                             <div class="container">
