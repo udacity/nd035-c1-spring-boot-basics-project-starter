@@ -373,8 +373,8 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testAddNoteAndVerifyNoteDisplay() {
-		doMockSignUp("Note","Test","Note","123");
-		doLogIn("Note", "123");
+		doMockSignUp("AddNote","Test","AddNote","123");
+		doLogIn("AddNote", "123");
 
 		String noteTitle = "Note Title";
 		String noteDescription = "Note Description";
@@ -397,8 +397,8 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testAddNoteThenEditNoteAndVerifyNote() {
-		doMockSignUp("Note","Test","Note","123");
-		doLogIn("Note", "123");
+		doMockSignUp("EditNote","Test","EditNote","123");
+		doLogIn("EditNote", "123");
 
 		String noteTitle = "Note Title";
 		String noteDescription = "Note Description";
@@ -487,8 +487,8 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testAddCredentialAndVerifyCredentialDisplay() {
-		doMockSignUp("Credential","Test","Credential","123");
-		doLogIn("Credential", "123");
+		doMockSignUp("AddCredential","Test","AddCredential","123");
+		doLogIn("AddCredential", "123");
 
 		String credentialUrl = "test-url.com";
 		String credentialUsername = "test";
@@ -516,8 +516,8 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testAddCredentialThenEditCredentialAndVerifyCredentialDisplay() {
-		doMockSignUp("Credential","Test","Credential","123");
-		doLogIn("Credential", "123");
+		doMockSignUp("EditCredential","Test","EditCredential","123");
+		doLogIn("EditCredential", "123");
 
 		String credentialUrl = "test-url.com";
 		String credentialUsername = "test";
@@ -572,4 +572,53 @@ class CloudStorageApplicationTests {
 		Assertions.assertNotEquals(plainCredentialPasswordEdit, credentialPasswordOutput.getText());
 	}
 
+	@Test
+	public void testAddCredentialThenDeleteCredentialAndVerifyCredentialDisplay() {
+		doMockSignUp("Credential","Test","Credential","123");
+		doLogIn("Credential", "123");
+
+		String credentialUrl = "test-url.com";
+		String credentialUsername = "test";
+		String plainCredentialPassword = "password";
+
+		doAddCredential(credentialUrl, credentialUsername, plainCredentialPassword);
+
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUrl")));
+		WebElement credentialUrlOutput = driver.findElement(By.id("credentialUrl"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialUsername")));
+		WebElement credentialUsernameOutput = driver.findElement(By.id("credentialUsername"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialPassword")));
+		WebElement credentialPasswordOutput = driver.findElement(By.id("credentialPassword"));
+
+		Assertions.assertEquals(credentialUrl, credentialUrlOutput.getText());
+		Assertions.assertEquals(credentialUsername, credentialUsernameOutput.getText());
+		Assertions.assertNotEquals(plainCredentialPassword, credentialPasswordOutput.getText());
+
+		driver.get("http://localhost:" + this.port + "/home");
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("deleteCredentialLink")));
+		WebElement deleteCredentialLink = driver.findElement(By.id("deleteCredentialLink"));
+		deleteCredentialLink.click();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		credentialTabLink = driver.findElement(By.id("nav-credentials-tab"));
+		credentialTabLink.click();
+
+		int countCredentialUrl = driver.findElements(By.id("credentialUrl")).size();
+		int countCredentialUsername = driver.findElements(By.id("credentialUsername")).size();
+		int countCredentialPassword = driver.findElements(By.id("credentialPassword")).size();
+
+		Assertions.assertEquals(0, countCredentialUrl);
+		Assertions.assertEquals(0, countCredentialUsername);
+		Assertions.assertEquals(0, countCredentialPassword);
+	}
 }
