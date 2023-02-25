@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +81,7 @@ public class SuperDuperDriveController {
     }
 
     @PostMapping(path = "/file")
-    public String addFile(Model model, @RequestParam("fileUpload") MultipartFile fileUpload) throws IOException {
+    public String addFile(RedirectAttributes redirectAttributes, @RequestParam("fileUpload") MultipartFile fileUpload) throws IOException {
 
         File file = new File();
         file.setFileName(fileUpload.getOriginalFilename());
@@ -89,6 +90,9 @@ public class SuperDuperDriveController {
         InputStream inputStream = fileUpload.getInputStream();
         file.setFileData(inputStream.readAllBytes());
         boolean isFileAdded = fileService.addFile(file) != 0;
+        if (!isFileAdded) {
+            buildErrorAttributes(redirectAttributes, "Can not upload file, duplicate File Name");
+        }
         return "redirect:/home";
     }
 
@@ -105,5 +109,10 @@ public class SuperDuperDriveController {
 
         boolean isFileDeleted = fileService.deleteFile(Integer.parseInt(fileId)) != 0;
         return "redirect:/home";
+    }
+
+    private void buildErrorAttributes(RedirectAttributes redirectAttributes, String errorMesss) {
+        redirectAttributes.addFlashAttribute("isError", true);
+        redirectAttributes.addFlashAttribute("errorMess", errorMesss);
     }
 }

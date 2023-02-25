@@ -22,7 +22,11 @@ public class FileService {
     }
 
     public int addFile(File file) {
-        return fileMapper.insertFile(file.getFileName(), file.getContentType(), file.getFileSize(), userDetailService.getCurrentUserId(), file.getFileData());
+        int fileAddedStatus = 0;
+        if (!isFileNameExisted(file.getFileName())) {
+            fileAddedStatus = fileMapper.insertFile(file.getFileName(), file.getContentType(), file.getFileSize(), userDetailService.getCurrentUserId(), file.getFileData());
+        }
+        return fileAddedStatus;
     }
 
     public File getFileByFileId(Integer fileId) {
@@ -31,5 +35,14 @@ public class FileService {
 
     public int deleteFile(Integer fileId) {
         return fileMapper.deleteFile(fileId);
+    }
+
+    public boolean isFileNameExisted(String fileName) {
+        boolean isFileNameExisted = false;
+        File file = fileMapper.getFilesByFileName(fileName, userDetailService.getCurrentUserId());
+        if (file != null) {
+            isFileNameExisted = file.getFileName().equals(fileName);
+        }
+        return isFileNameExisted;
     }
 }
