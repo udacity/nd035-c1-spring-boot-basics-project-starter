@@ -119,6 +119,14 @@ class CloudStorageApplicationTests {
 
 	}
 
+	private void dologOut() {
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logoutDiv")));
+		WebElement uploadButton = driver.findElement(By.id("logOutButton"));
+		uploadButton.click();
+	}
+
 	/**
 	 * PLEASE DO NOT DELETE THIS TEST. You may modify this test to work with the 
 	 * rest of your code. 
@@ -200,6 +208,33 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	public void testUnauthorizeAccessToLoginPage() {
+
+		driver.get("http://localhost:" + this.port + "/login");
+		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
+
+	@Test
+	public void testUnauthorizeAccessToSignUpPage() {
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		Assertions.assertEquals("http://localhost:" + this.port + "/signup", driver.getCurrentUrl());
+	}
+
+	@Test
+	public void testLogOut() {
+
+		doMockSignUp("Large File","Test","LFT","123");
+
+		doLogIn("LFT", "123");
+		driver.get("http://localhost:" + this.port + "/home");
+		Assertions.assertEquals("http://localhost:" + this.port + "/home", driver.getCurrentUrl());
+
+		dologOut();
+		driver.get("http://localhost:" + this.port + "/home");
+		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
 
 
 }
