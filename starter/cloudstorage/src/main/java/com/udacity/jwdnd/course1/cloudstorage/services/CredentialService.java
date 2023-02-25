@@ -34,6 +34,12 @@ public class CredentialService {
         return credentialMapper.insertCredential(credential.getUrl(), credential.getUsername(), key, encryptedPassword, userDetailService.getCurrentUserId());
     }
 
+    public int updateCredential(Credential credential) {
+        String key = userDetailService.generateRandomKey();
+        String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), key);
+        return credentialMapper.updateCredential(credential.getCredentialId(), credential.getUrl(), credential.getUsername(), key, encryptedPassword, userDetailService.getCurrentUserId());
+    }
+
     public List<CredentialResponse> buildCredentialsResponses(List<Credential> credentials) {
         List<CredentialResponse> credentialResponses = new ArrayList<>();
         credentials.forEach(credential -> {

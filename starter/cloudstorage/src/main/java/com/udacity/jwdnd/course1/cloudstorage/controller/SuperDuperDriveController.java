@@ -66,7 +66,7 @@ public class SuperDuperDriveController {
     public String addCredential(Model model, @ModelAttribute Credential credential) {
 
         if (credential.getCredentialId() != null) {
-            boolean isCredentialUpdated = true;
+            boolean isCredentialUpdated = credentialService.updateCredential(credential) != 0;
         } else {
             boolean isCredentialAdded = credentialService.addCredential(credential) != 0;
         }
