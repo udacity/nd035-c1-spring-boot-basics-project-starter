@@ -122,7 +122,7 @@ class CloudStorageApplicationTests {
 	private void dologOut() {
 		driver.get("http://localhost:" + this.port + "/home");
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logoutDiv")));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logOutButton")));
 		WebElement uploadButton = driver.findElement(By.id("logOutButton"));
 		uploadButton.click();
 	}
@@ -225,7 +225,7 @@ class CloudStorageApplicationTests {
 	@Test
 	public void testLogOut() {
 
-		doMockSignUp("Large File","Test","LFT","123");
+		doMockSignUp("Log out","Test","Log out","123");
 
 		doLogIn("LFT", "123");
 		driver.get("http://localhost:" + this.port + "/home");
@@ -234,6 +234,56 @@ class CloudStorageApplicationTests {
 		dologOut();
 		driver.get("http://localhost:" + this.port + "/home");
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
+
+	@Test
+	public void testAddNoteAndVerifyNoteDisplay() {
+		doMockSignUp("Note","Test","Note","123");
+		doLogIn("Note", "123");
+
+		String noteTitle = "Note Title";
+		String noteDescription = "Note Description";
+		doAddNote(noteTitle, noteDescription);
+
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement noteTabLink = driver.findElement(By.id("nav-notes-tab"));
+		noteTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteTitle")));
+		WebElement noteTitleOutput = driver.findElement(By.id("noteTitle"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteDescription")));
+		WebElement noteDescriptionOutput = driver.findElement(By.id("noteDescription"));
+
+		Assertions.assertEquals(noteTitle, noteTitleOutput.getText());
+		Assertions.assertEquals(noteDescription, noteDescriptionOutput.getText());
+	}
+
+	private void doAddNote(String noteTitle, String noteDescription) {
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement noteTabLink = driver.findElement(By.id("nav-notes-tab"));
+		noteTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("addNoteButton")));
+		WebElement uploadButton = driver.findElement(By.id("addNoteButton"));
+		uploadButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-title")));
+		WebElement noteTitleInput = driver.findElement(By.id("note-title"));
+		noteTitleInput.click();
+		noteTitleInput.sendKeys(noteTitle);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+		WebElement noteDescriptionInput = driver.findElement(By.id("note-description"));
+		noteDescriptionInput.click();
+		noteDescriptionInput.sendKeys(noteDescription);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitNoteButton")));
+		WebElement submitNoteButton = driver.findElement(By.id("submitNoteButton"));
+		submitNoteButton.click();
 	}
 
 
