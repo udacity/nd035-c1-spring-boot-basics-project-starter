@@ -82,7 +82,7 @@
                                                     class="btn btn-success"
                                                     onclick="showNoteModal()"
                                             th:attr="onclick=|showNoteModal('${note.noteId}', '${note.noteTitle}', '${note.noteDescription}')|">Edit</button>
-                                            <a th:href="@{'/note/' + ${note.noteId} + '/delete'}" class="btn btn-danger">Delete</a>
+                                            <a id="deleteNoteLink" th:href="@{'/note/' + ${note.noteId} + '/delete'}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th id="noteTitle" th:text="${note.noteTitle}" scope="row"></th>
                                         <td id="noteDescription" th:text="${note.noteDescription}"></td>

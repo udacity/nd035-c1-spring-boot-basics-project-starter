@@ -353,7 +353,49 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertEquals(noteTitleEdited, noteTitleOutput.getText());
 		Assertions.assertEquals(noteDescriptionEdited, noteDescriptionOutput.getText());
+	}
 
+	@Test
+	public void testAddNoteThenDeleteNoteAndVerifyNote() {
+		doMockSignUp("Note","Test","Note","123");
+		doLogIn("Note", "123");
+
+		String noteTitle = "Note Title";
+		String noteDescription = "Note Description";
+		doAddNote(noteTitle, noteDescription);
+
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement noteTabLink = driver.findElement(By.id("nav-notes-tab"));
+		noteTabLink.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteTitle")));
+		WebElement noteTitleOutput = driver.findElement(By.id("noteTitle"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteDescription")));
+		WebElement noteDescriptionOutput = driver.findElement(By.id("noteDescription"));
+
+		Assertions.assertEquals(noteTitle, noteTitleOutput.getText());
+		Assertions.assertEquals(noteDescription, noteDescriptionOutput.getText());
+
+		driver.get("http://localhost:" + this.port + "/home");
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		noteTabLink = driver.findElement(By.id("nav-notes-tab"));
+		noteTabLink.click();
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("deleteNoteLink")));
+		WebElement deleteNoteLink = driver.findElement(By.id("deleteNoteLink"));
+		deleteNoteLink.click();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		noteTabLink = driver.findElement(By.id("nav-notes-tab"));
+		noteTabLink.click();
+
+		int countNoteTitle = driver.findElements(By.id("noteTitle")).size();
+		int countNoteDescription = driver.findElements(By.id("noteDescription")).size();
+
+		Assertions.assertEquals(0, countNoteTitle);
+		Assertions.assertEquals(0, countNoteDescription);
 	}
 
 }
