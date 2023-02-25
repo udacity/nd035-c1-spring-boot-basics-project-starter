@@ -34,7 +34,7 @@ public class FileService {
     }
 
     public int deleteFile(Integer fileId) {
-        return fileMapper.deleteFile(fileId);
+        return fileMapper.deleteFile(fileId, userDetailService.getCurrentUserId());
     }
 
     public boolean isFileNameExisted(String fileName) {

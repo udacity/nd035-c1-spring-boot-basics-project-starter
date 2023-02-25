@@ -34,6 +34,6 @@ public class NoteService {
     }
 
     public int deleteNote(Integer noteId) {
-        return noteMapper.deleteNote(noteId);
+        return noteMapper.deleteNote(noteId, userDetailService.getCurrentUserId());
     }
 }

@@ -50,7 +50,7 @@ public class CredentialService {
     }
 
     public int deleteCredential(Integer credentialId) {
-        return credentialMapper.deleteCredential(credentialId);
+        return credentialMapper.deleteCredential(credentialId, userDetailService.getCurrentUserId());
     }
 
     private String getDecryptedPassword(String key, String encryptedPassword) {

@@ -24,6 +24,6 @@ public interface FileMapper {
             "(#{fileName}, #{contentType}, #{fileSize}, #{userId}, #{fileData})")
     int insertFile(String fileName, String contentType, String fileSize, Integer userId, byte[] fileData);
 
-    @Delete("DELETE FROM FILES WHERE fileId = #{fileId}")
-    int deleteFile(Integer fileId);
+    @Delete("DELETE FROM FILES WHERE fileId = #{fileId} AND userId = #{userId]")
+    int deleteFile(Integer fileId, Integer userId);
 }
