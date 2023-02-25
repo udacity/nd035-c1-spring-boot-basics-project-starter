@@ -128,9 +128,12 @@ public class SuperDuperDriveController {
     @GetMapping(path = "/file/{fileId}/view")
     public ResponseEntity<byte[]> getFile(@PathVariable("fileId") String fileId) throws IOException {
         File file = fileService.getFileByFileId(Integer.parseInt(fileId));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentDisposition(ContentDisposition.builder("attachment").filename(file.getFileName()).build());
-        return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.parseMediaType(file.getContentType())).body(file.getFileData());
+        if (file != null) {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentDisposition(ContentDisposition.builder("attachment").filename(file.getFileName()).build());
+            return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.parseMediaType(file.getContentType())).body(file.getFileData());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping(path = "/file/{fileId}/delete")
