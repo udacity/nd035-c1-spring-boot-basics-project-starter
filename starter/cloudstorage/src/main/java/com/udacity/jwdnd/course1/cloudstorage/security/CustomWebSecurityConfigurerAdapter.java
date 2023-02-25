@@ -19,11 +19,12 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/login/**").permitAll();
+        http.authorizeRequests().antMatchers("/login-fail/**").permitAll();
         http.authorizeRequests().antMatchers("/signup/**").permitAll();
         http.authorizeRequests().antMatchers("/logout/**").permitAll();
         http.authorizeRequests().antMatchers("/css/**").permitAll();
         http.authorizeRequests().antMatchers("/js/**").permitAll();
-        http.formLogin().loginPage("/login").defaultSuccessUrl("/home").and().logout().logoutUrl(
+        http.formLogin().loginPage("/login").defaultSuccessUrl("/home").failureUrl("/login-fail").and().logout().logoutUrl(
                 "/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
         http.authorizeRequests().anyRequest().authenticated();

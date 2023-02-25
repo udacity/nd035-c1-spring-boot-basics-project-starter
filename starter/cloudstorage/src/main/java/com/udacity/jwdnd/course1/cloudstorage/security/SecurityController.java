@@ -46,4 +46,10 @@ public class SecurityController {
 
         return "login";
     }
+
+    @GetMapping(path = "/login-fail")
+    public String loginFailed(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("isInvalidCred", true);
+        return "redirect:/login";
+    }
 }
