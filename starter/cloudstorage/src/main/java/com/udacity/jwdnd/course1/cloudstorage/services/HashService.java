@@ -20,8 +20,9 @@ public class HashService {
         byte[] hashedValue = null;
 
         int iterCount = 12288;
-        int derivedKeyLength = 256;
+        int derivedKeyLength = 128;  // Reduce to 128 bits (16 bytes)
         KeySpec spec = new PBEKeySpec(data.toCharArray(), salt.getBytes(), iterCount, derivedKeyLength * 8);
+
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             hashedValue = factory.generateSecret(spec).getEncoded();

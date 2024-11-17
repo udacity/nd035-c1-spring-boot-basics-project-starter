@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -17,7 +19,7 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE username = #{username}")
     User selectUserByUsername(String username);
 
-    @Insert("INSERT INTO users (username, email, salt, password, firstname, lastname) VALUES (#{username}, #{email}, #{salt}, #{password}, #{firstname}, #{lastname})")
+    @Insert("INSERT INTO users (username, salt, password, firstname, lastname) VALUES (#{username}, #{salt}, #{password}, #{firstname}, #{lastname})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertUser(User user);
 
@@ -26,4 +28,7 @@ public interface UserMapper {
 
     @Update("UPDATE users SET username = #{username}, email = #{email}, salt = #{salt}, password = #{password} WHERE id = #{id}")
     void updateUser(User user);
+
+    @Select("SELECT * FROM users")
+    List<User> selectAllUsers();
 }
