@@ -15,22 +15,14 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userMapper = userMapper;
     }
 
     @GetMapping("/login")
-    public String loginGet(User user) {
-        return "login";
-    }
-
-    @PostMapping ("/login")
-    public String loginPost(User user) {
-        userService.getUser(user);
+    public String loginGet() {
         return "login";
     }
 
@@ -43,7 +35,7 @@ public class UserController {
     public String signupPost(User user,  Model model) {
         try {
             userService.addUser(user);
-            return "redirect:/home";
+            return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "signup";

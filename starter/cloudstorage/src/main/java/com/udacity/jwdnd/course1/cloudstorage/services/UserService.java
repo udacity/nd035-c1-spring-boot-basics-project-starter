@@ -13,10 +13,13 @@ public class UserService {
     private final UserMapper userMapper;
     private final HashService hashService;
 
+    private final EncryptionService encryptionService;
+
     @Autowired
-    public UserService(UserMapper userMapper, HashService hashService) {
+    public UserService(UserMapper userMapper, HashService hashService, EncryptionService encryptionService) {
         this.userMapper = userMapper;
         this.hashService = hashService;
+        this.encryptionService = encryptionService;
     }
 
     public void addUser(User user) {
@@ -37,11 +40,35 @@ public class UserService {
         userMapper.insertUser(user);
     }
 
-    public void loginUser(User user) {
+    public void validateUser(User user) {
+        User found = userMapper.selectUserByUsername(user.getUsername());
+        if (found == null) {
+            throw new IllegalArgumentException("User not found");
+        }
 
+        String storedSalt = user.getSalt();
+        String storedHashedPassword = user.getPassword();
+
+        String hashedInputPassword = hashService.getHashedValue(user.getPassword(), storedSalt);
+
+        if (!hashedInputPassword.equals(storedHashedPassword)) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
     }
 
-    public void getUser(User user) {
-        userMapper.selectUserByUsername(user.getUsername());
+    public void validateUser(String username, String password) {
+        User user = userMapper.selectUserByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        String storedSalt = user.getSalt();
+        String storedHashedPassword = user.getPassword();
+
+        String hashedInputPassword = hashService.getHashedValue(password, storedSalt);
+
+        if (!hashedInputPassword.equals(storedHashedPassword)) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
     }
 }

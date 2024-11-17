@@ -14,17 +14,20 @@ import java.util.Base64;
 @Service
 public class EncryptionService {
     private Logger logger = LoggerFactory.getLogger(EncryptionService.class);
+    private Cipher cipher;
+
+    EncryptionService() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        this.cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+    }
 
     public String encryptValue(String data, String key) {
         byte[] encryptedValue = null;
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             SecretKey secretKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             encryptedValue = cipher.doFinal(data.getBytes("UTF-8"));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
         }
 
@@ -35,12 +38,10 @@ public class EncryptionService {
         byte[] decryptedValue = null;
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             SecretKey secretKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             decryptedValue = cipher.doFinal(Base64.getDecoder().decode(data));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException
-                | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
         }
 

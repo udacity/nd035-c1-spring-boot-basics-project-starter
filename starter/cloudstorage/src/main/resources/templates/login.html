@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-    `<head>
+    <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -11,17 +11,15 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
-            <!-- Form to authenticate the user -->
             <form th:action="@{/login}" method="POST">
 
-                <!-- Display an error message if the 'error' parameter is present -->
-        <!--        <div th:if="${param.error}" class="alert alert-danger">-->
-        <!--            Invalid username or password-->
-        <!--        </div>-->
-        <!--        &lt;!&ndash; Display a logout message if the 'logout' parameter is present &ndash;&gt;-->
-        <!--        <div th:if="${param.logout}" class="alert alert-dark">-->
-        <!--            You have been logged out-->
-        <!--        </div>-->
+                <div th:if="${param.error}" class="alert alert-danger">
+                    <p>Invalid username or password</p>
+                </div>
+
+                <div th:if="${param.logout}" class="alert alert-dark">
+                    <p>You have been logged out</p>
+                </div>
                 <div class="form-group">
                     <label for="inputUsername">Username</label>
                     <input type="input" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
@@ -37,5 +35,5 @@
                 <label><a href="/signup">Click here to sign up</a></label>
             </div>
         </div>
-    </body>`
+    </body>
 </html>
