@@ -20,7 +20,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // Explicitly set the custom AuthenticationProvider
         auth.authenticationProvider(authProvider);
     }
 
@@ -28,16 +27,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/home", "/result").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
+                .antMatchers("/fileUpload").authenticated() // Make sure this is correct
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/home")
+                .defaultSuccessUrl("/home", true)
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
                 .permitAll();
     }
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class User implements UserDetails {
-    private Long id;
+    private Long userid;
     private String username;
     private String firstname;
     private String lastname;
@@ -48,11 +48,11 @@ public class User implements UserDetails {
     }
 
     public Long getId() {
-        return id;
+        return userid;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.userid = id;
     }
 
     @Override

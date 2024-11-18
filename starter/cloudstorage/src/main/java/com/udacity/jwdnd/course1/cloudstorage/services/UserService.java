@@ -71,4 +71,8 @@ public class UserService {
             throw new IllegalArgumentException("Invalid username or password");
         }
     }
+
+    public User getUserByUsername(String username) {
+        return userMapper.selectUserByUsername(username);
+    }
 }
