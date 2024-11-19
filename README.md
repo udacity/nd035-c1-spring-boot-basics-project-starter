@@ -14,7 +14,7 @@ Your tech lead already designed a database schema for the project and has added 
 
 Your tech lead also created some HTML templates from the design team's website mockups, and they placed them in the `src/main/resources/templates` folder. These are static pages right now, and you have to configure them with Thymeleaf to add functionality and real data from the server you develop. You may also have to change them to support testing the application.
 
-From the link above, you can download the starter code and open it as a Maven project in IntelliJ.
+From the link above, you can download the starter code and open it as a Maven project in VSCode or IntelliJ.
 
 ## Requirements and Roadmap
 Your tech lead is excited to work with you and has laid out a development roadmap with requirements and milestones. They tell you that there are three layers of the application you need to implement:
@@ -27,7 +27,7 @@ Your tech lead is excited to work with you and has laid out a development roadma
 The back-end is all about security and connecting the front-end to database data and actions. 
 
 1. Managing user access with Spring Security
- - You have to restrict unauthorized users from accessing pages other than the login and signup pages. To do this, you must create a security configuration class that extends the `WebSecurityConfigurerAdapter` class from Spring. Place this class in a package reserved for security and configuration. Often this package is called `security` or `config`.
+ - You have to restrict unauthorized users from accessing pages other than the login and signup pages. To do this, you must create a security configuration class that uses `SecurityFilterChain` class from Spring. Place this class in a package reserved for security and configuration. Often this package is called `security` or `config`.
  - Spring Boot has built-in support for handling calls to the `/login` and `/logout` endpoints. You have to use the security configuration to override the default login page with one of your own, discussed in the front-end section.
  - You also need to implement a custom `AuthenticationProvider` which authorizes user logins by matching their credentials against those stored in the database.  
 
@@ -42,6 +42,7 @@ The back-end is all about security and connecting the front-end to database data
 3. Making calls to the database with MyBatis mappers
  - Since you were provided with a database schema to work with, you can design Java classes to match the data in the database. These should be POJOs (Plain Old Java Objects) with fields that match the names and data types in the schema, and you should create one class per database table. These classes typically are placed in a `model` or `entity` package.
  - To connect these model classes with database data, implement MyBatis mapper interfaces for each of the model types. These mappers should have methods that represent specific SQL queries and statements required by the functionality of the application. They should support the basic CRUD (Create, Read, Update, Delete) operations for their respective models at the very least. You can place these classes in (you guessed it!) the `mapper` package.
+ - Default supported DB is Postgres SQL and the schema provided in schema.sql is compatible to work with Postgres. You can follow previous lesson video which cover steps to create these tables in postgres.
 
 
 ### The Front-End
