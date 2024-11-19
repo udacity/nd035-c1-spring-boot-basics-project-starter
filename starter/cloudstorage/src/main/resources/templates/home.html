@@ -55,12 +55,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="file : ${files}">
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
+                                        <!-- Link to view the file -->
+                                        <a th:href="@{/files/{id}(id=${file.fileId})}" target="_blank" class="btn btn-success">View</a>
+                                        <!-- Link to delete the file -->
+                                        <a th:href="@{/files/delete/{id}(id=${file.fileId})}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th scope="row">ExampleFile.txt</th>
+                                    <th scope="row" th:text="${file.filename}"></th>
                                 </tr>
                                 </tbody>
                             </table>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -34,5 +35,22 @@ public class FileService {
         file.setFiledata(multipartFile.getBytes());
 
         fileMapper.insertFile(file);
+    }
+
+    public File getFileById(Integer id) {
+        return fileMapper.getFileById(id);
+    }
+
+    public void deleteFileById(Integer id) {
+        fileMapper.deleteFileById(id);
+    }
+
+    public List<File> getAllFiles(long userId) throws IOException {
+        if (userId < Integer.MIN_VALUE || userId > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("Could not convert userid." + userId);
+        }
+        Integer id = (int) userId;
+
+        return fileMapper.getFilesByUserId(id);
     }
 }
