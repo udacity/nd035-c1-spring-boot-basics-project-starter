@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS CREDENTIALS (
     credentialid serial PRIMARY KEY,
     url VARCHAR(100),
     username VARCHAR (30),
-    key VARCHAR,
+    encoded_key VARCHAR,
     password VARCHAR,
     userid INT,
     foreign key (userid) references USERS(userid)
