@@ -22,14 +22,20 @@ public class FileService {
     public void saveFile(MultipartFile multipartFile, long userId) throws IOException {
         File file = new com.udacity.jwdnd.course1.cloudstorage.models.File();
 
-        file.setFilename(multipartFile.getOriginalFilename());
-        file.setContenttype(multipartFile.getContentType());
-        file.setFilesize(String.valueOf(multipartFile.getSize()));
-
         if (userId < Integer.MIN_VALUE || userId > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Could not convert userid." + userId);
         }
         Integer id = (int) userId;
+
+        File found = fileMapper.getFileByUserIdAndFileName(id, multipartFile.getOriginalFilename());
+
+        if (found == null) {
+            throw new IllegalArgumentException("A file with the same name already exists for this user.");
+        }
+
+        file.setFilename(multipartFile.getOriginalFilename());
+        file.setContenttype(multipartFile.getContentType());
+        file.setFilesize(String.valueOf(multipartFile.getSize()));
 
         file.setUserid(id);
         file.setFiledata(multipartFile.getBytes());

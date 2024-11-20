@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController {
@@ -30,9 +31,10 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signupPost(User user,  Model model) {
+    public String signupPost(User user, RedirectAttributes redirectAttributes, Model model) {
         try {
             userService.addUser(user);
+            redirectAttributes.addFlashAttribute("successMessage", "You successfully signed up!");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());

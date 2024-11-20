@@ -7,6 +7,9 @@
         <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
         <title>Login</title>
+        <div th:if="${successMessage}" class="alert alert-success" role="alert" id="success-msg">
+            <span th:text="${successMessage}"></span>
+        </div>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">

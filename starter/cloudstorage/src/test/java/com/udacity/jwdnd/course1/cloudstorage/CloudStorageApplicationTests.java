@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -9,12 +10,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.io.File;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // Use this annotation
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
+
+	private static UserMapper userMapper;
+
+	@Autowired
+	CloudStorageApplicationTests(UserMapper userMapper) {
+		this.userMapper = userMapper;
+	}
 
 	@LocalServerPort
 	private int port;
@@ -24,6 +35,7 @@ class CloudStorageApplicationTests {
 	@BeforeAll
 	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
+		userMapper.deleteAllUsers();
 	}
 
 	@BeforeEach
@@ -36,6 +48,11 @@ class CloudStorageApplicationTests {
 		if (this.driver != null) {
 			driver.quit();
 		}
+	}
+
+	@AfterAll
+	public void afterAll() {
+		userMapper.deleteAllUsers();
 	}
 
 	@Test
@@ -84,7 +101,7 @@ class CloudStorageApplicationTests {
 
 		/* Check that the sign up was successful. 
 		// You may have to modify the element "success-msg" and the sign-up 
-		// success message below depening on the rest of your code.
+		// success message below depending on the rest of your code.
 		*/
 		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
 	}

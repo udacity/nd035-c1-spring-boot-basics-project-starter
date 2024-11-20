@@ -31,4 +31,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users")
     List<User> selectAllUsers();
+
+    @Delete("DELETE FROM users")
+    void deleteAllUsers();
 }
