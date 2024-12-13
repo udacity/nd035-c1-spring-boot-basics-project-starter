@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.io.File;
+import java.time.Duration;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
@@ -52,7 +53,7 @@ class CloudStorageApplicationTests {
 		// Create a dummy account for logging in later.
 
 		// Visit the sign-up page.
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(2));
 		driver.get("http://localhost:" + this.port + "/signup");
 		webDriverWait.until(ExpectedConditions.titleContains("Sign Up"));
 		
@@ -99,7 +100,7 @@ class CloudStorageApplicationTests {
 	{
 		// Log in to our dummy account.
 		driver.get("http://localhost:" + this.port + "/login");
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(2));
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
 		WebElement loginUserName = driver.findElement(By.id("inputUsername"));
@@ -182,7 +183,7 @@ class CloudStorageApplicationTests {
 		doLogIn("LFT", "123");
 
 		// Try to upload an arbitrary large file
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(2));
 		String fileName = "upload5m.zip";
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
